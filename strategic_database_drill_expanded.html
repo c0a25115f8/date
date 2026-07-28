@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戦略的データベース演習 講義要約＆テスト(拡張版)</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            cursor: pointer;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #e0e0e0;
+            font-weight: bold;
+            color: #7f8c8d;
+            border-radius: 8px 8px 0 0;
+            transition: background 0.3s, color 0.3s;
+        }
+        .tab:hover {
+            background: #d5dbdb;
+        }
+        .tab.active {
+            background: #fff;
+            color: #2c3e50;
+            border-top: 3px solid #2980b9;
+            border-left: 1px solid #bdc3c7;
+            border-right: 1px solid #bdc3c7;
+            margin-bottom: -2px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .summary-section {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 5px solid #27ae60;
+        }
+        .summary-section h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .summary-section ul {
+            padding-left: 20px;
+        }
+        .summary-section li {
+            margin-bottom: 8px;
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+        }
+        .question-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .options li:hover {
+            background: #eaf2f8;
+        }
+        .options li.selected.correct {
+            background: #d4efdf;
+            border-color: #27ae60;
+        }
+        .options li.selected.incorrect {
+            background: #fadbd8;
+            border-color: #e74c3c;
+        }
+        .btn {
+            display: inline-block;
+            background: #2980b9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .btn:hover {
+            background: #1f618d;
+        }
+        .answer-area {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #bdc3c7;
+            display: none;
+        }
+        .answer-label {
+            font-weight: bold;
+            color: #c0392b;
+        }
+        .explanation {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>戦略的データベース演習</h1>
+        <p>知識の再構築と実践（全講義反映版）</p>
+    </header>
+    <div class="container">
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('memorize_tab')">暗記モード (体系的要約)</div>
+            <div class="tab" onclick="switchTab('test_tab')">テストモード (4択 100問)</div>
+        </div>
+
+        <!-- 暗記モードコンテンツ -->
+        <div id="memorize_tab" class="tab-content active">
+            
+<div class="summary-section">
+    <h2>第1回: データモデルと3層スキーマ構造</h2>
+    <ul>
+        <li><strong>DBMS三大機能:</strong> メタデータ管理、問合せ処理、トランザクション管理。</li>
+        <li><strong>データモデル:</strong> データをどのような構造で整理するかを決める概念（関係モデルが主流）。</li>
+        <li><strong>3層スキーマ:</strong> 
+            <ul>
+                <li>外部スキーマ: ユーザごとの見え方（ビュー）</li>
+                <li>概念スキーマ: データベース全体の論理構造</li>
+                <li>内部スキーマ: 物理的な格納方法</li>
+            </ul>
+        </li>
+        <li><strong>データ独立性:</strong> 論理的独立性（概念の変更が外部に影響しない）、物理的独立性（内部の変更が概念に影響しない）。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第2回: 関係データモデルとキー制約</h2>
+    <ul>
+        <li><strong>関係 (Relation):</strong> 表のこと。行の集まり。行＝タプル、列＝属性、ドメイン＝属性の取りうる値の集合。</li>
+        <li><strong>キーの分類:</strong>
+            <ul>
+                <li>スーパーキー: 行を一意に識別できる属性の組（余分が含まれてもよい）。</li>
+                <li>候補キー: 一意性と極小性を満たすスーパーキー。</li>
+                <li>主キー: 候補キーから選ばれた1つ（NULL不可）。</li>
+                <li>外部キー: 他の表の主キーを参照し、参照整合性制約を保つ。</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第3回: 関係(リレーショナル) 代数</h2>
+    <ul>
+        <li><strong>集合演算:</strong> 和(UNION)、差(EXCEPT/DIFFERENCE)、共通(INTERSECT)、直積(CROSS JOIN)。和両立が前提となるものがある。</li>
+        <li><strong>関係演算:</strong>
+            <ul>
+                <li>選択 (Selection): 条件を満たす行(タプル)を抽出。</li>
+                <li>射影 (Projection): 特定の列(属性)を抽出。</li>
+                <li>結合 (Join): 2つの関係を共通の属性で結びつける。等結合、自然結合、外部結合がある。</li>
+                <li>商 (Division): 指定された条件をすべて満たすものを求める演算。</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第4〜6回: SQLによる問合せ</h2>
+    <ul>
+        <li><strong>評価順序:</strong> FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</li>
+        <li><strong>結合:</strong> INNER JOIN（一致のみ）、LEFT/RIGHT JOIN（未マッチはNULL補完）。条件はON句に記述。</li>
+        <li><strong>副問合せ:</strong> SELECT文の入れ子。EXISTS は存在判定に強く、NOT IN はNULLを含むと全体がUNKNOWNになる落とし穴があるため NOT EXISTS を推奨。</li>
+        <li><strong>相関副問合せ:</strong> 外側の行ごとに内側が実行されるため処理が重くなる。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第7〜8回: 正規化理論とスキーマ分解</h2>
+    <ul>
+        <li><strong>目的:</strong> 更新時異状（挿入・更新・削除の矛盾）を排除し、情報無損失分解をすること。</li>
+        <li><strong>第1正規形 (1NF):</strong> 繰り返し項目、複数値属性、入れ子構造を排除。</li>
+        <li><strong>第2正規形 (2NF):</strong> 1NF ＋ 候補キーの一部だけで決まる「部分関数従属性」を排除。</li>
+        <li><strong>第3正規形 (3NF):</strong> 2NF ＋ 非キー属性同士で決まる「推移的関数従属性」を排除。情報無損失かつ関数従属性保存が両立可能。</li>
+        <li><strong>ボイス・コッド正規形 (BCNF):</strong> すべての関数従属性 X→Y において、Xがスーパーキーであることを求める。主属性に対する従属も排除。分解時に関数従属性保存が失われることがある。</li>
+        <li><strong>第4正規形 (4NF):</strong> 多値従属性（ある項目に対し、独立した複数の値の集合が存在）を排除。</li>
+        <li><strong>第5正規形 (5NF):</strong> 結合従属性（3つ以上に分解しても元に戻る制約）を排除。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第9〜10回: トランザクション管理と直列可能性</h2>
+    <ul>
+        <li><strong>ACID特性:</strong> 原子性 (ALL or NOTHING)、一貫性 (制約遵守)、独立性 (同時実行制御)、永続性 (障害後も残る)。</li>
+        <li><strong>並行制御とロック:</strong> 共有ロック(読出し)は両立するが、排他ロック(書込み)は両立しない。</li>
+        <li><strong>2相ロックプロトコル (2PL):</strong> 施錠相と解錠相に分かれ、一度アンロックすると新たなロックは取得できない。衝突直列化可能を保証。</li>
+        <li><strong>デッドロック:</strong> 互いにロック解放を待つ状態。待ちグラフの閉路で検出。</li>
+        <li><strong>回復処理 (WAL):</strong> データベース本体更新前に必ずログ(更新前/後)を書く(Write-Ahead Logging)。障害時は未コミットを更新前ログでUNDO(ロールバック)、コミット済みを更新後ログでREDO(ロールフォワード)。</li>
+        <li><strong>隔離性水準による現象:</strong> ダーティリード(未コミット読出し)、繰返し不可能読出し(途中で値が変わる)、ファントム(途中で行が増減する)。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第11回: インデックス構造とB+木</h2>
+    <ul>
+        <li><strong>データ格納:</strong> 行指向(OLTP向き)と列指向(OLAP・集計向き)。検索性能はディスクの「ページ読込み回数」が重要。</li>
+        <li><strong>B+木インデックス:</strong> 木の高さが低く保たれ、実データへのポインタは葉ノードのみに存在。葉ノード同士が連結しており「等価検索」だけでなく「範囲検索」に強い。</li>
+        <li><strong>ハッシュインデックス:</strong> ハッシュ関数で格納位置を計算。等価検索に極めて強いが、範囲検索には不向き。</li>
+        <li><strong>クラスタ化/非クラスタ化:</strong> クラスタ化索引は索引順と物理配置が近く範囲検索に有利。非クラスタ化索引で大量行を読むとランダムI/Oが増加する。</li>
+        <li><strong>複合インデックス:</strong> 指定した列順(A, B)でソートされるため、「左端一致(A)」の条件が含まれていないと索引が効きにくい。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第12回: クエリ最適化とアクセスコスト評価</h2>
+    <ul>
+        <li><strong>論理的問合せ最適化:</strong> 「選択演算の早期適用」「射影演算の早期適用」。結合前にデータを絞り込み、中間結果を小さくすることが重要。</li>
+        <li><strong>物理的問合せ最適化:</strong> 全表走査か索引走査か。選択率（条件を満たす割合）が低い場合は索引が有効。</li>
+        <li><strong>結合アルゴリズム:</strong> 
+            <ul>
+                <li><strong>入れ子ループ結合:</strong> 外側1行ごとに内側を走査。外側が小さく内側に索引があると速いが、大表同士は激遅。</li>
+                <li><strong>ソートマージ結合:</strong> 両方をソートして照合。</li>
+                <li><strong>ハッシュ結合:</strong> 一方をメモリ上でハッシュ表にし、もう一方を走査して照合。大容量の等結合に強い。</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第13回: 空間・時系列・高次元データの管理と検索</h2>
+    <ul>
+        <li><strong>ビッグデータ (3V):</strong> Volume(量), Variety(多様性), Velocity(速度)。</li>
+        <li><strong>データレイク vs データウェアハウス:</strong> レイクは生データをそのまま(ELT向き)、ウェアハウスは分析用に構造化して蓄積(ETL向き)。</li>
+        <li><strong>空間データ:</strong> R-tree (最小外接矩形MBRで管理し、重ならない領域を枝刈り)。</li>
+        <li><strong>時系列データ:</strong> 最新値へのアクセス頻度が高く増え続けるため、パーティション化やロールアップ(粗く集約)が有効。</li>
+        <li><strong>文書データ:</strong> 転置インデックス（単語→文書IDの集合）。AND/OR検索等の集合演算に利用。</li>
+        <li><strong>高次元データ (ベクトル検索):</strong> 次元が増えると距離の差がなくなり厳密探索が破綻する(次元の呪い)。そのため LSH (Locality Sensitive Hashing) や HNSW による「近似最近傍探索(ANN)」が用いられる。生成AIにおけるRAG(検索拡張生成)の基盤。</li>
+    </ul>
+</div>
+
+        </div>
+        
+        <!-- テストモードコンテンツ -->
+        <div id="test_tab" class="tab-content">
+
+            <div class="question-card">
+                <div class="question-type">Q1 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ダーティリード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_1')">解答と解説を確認する</button>
+                <div id="test_ans_1" class="answer-area">
+                    <div class="answer-label">正解: 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</div>
+                    <div class="explanation">ダーティリードは、未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q2 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_2')">解答と解説を確認する</button>
+                <div id="test_ans_2" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q3 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「厳密なスケジュール」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_3')">解答と解説を確認する</button>
+                <div id="test_ans_3" class="answer-area">
+                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
+                    <div class="explanation">厳密なスケジュールは、他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュールとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q4 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_4')">解答と解説を確認する</button>
+                <div id="test_ans_4" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q5 : テストモード (4択)</div>
+                <div class="question-text">関係モデルにおいて、情報無損失分解ができ、かつ、関数従属性保存が成り立つ変換が必ず存在するものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">非正規形から第1正規形への変換</li><li onclick="checkAnswer(this, false)">ボイスコッド正規形から第4正規形への変換</li><li onclick="checkAnswer(this, false)">第3正規形からボイスコッド正規形への変換</li><li onclick="checkAnswer(this, true)">第2正規形から第3正規形への変換</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_5')">解答と解説を確認する</button>
+                <div id="test_ans_5" class="answer-area">
+                    <div class="answer-label">正解: 第2正規形から第3正規形への変換</div>
+                    <div class="explanation">第3正規形への分解は、情報無損失かつ関数従属性保存となるように構成できます。BCNFへの分解は関数従属性保存が常に成り立つとは限りません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q6 : テストモード (4択)</div>
+                <div class="question-text">関係モデルの候補キーの説明のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">一つの関係に候補キーが複数あってはならない。</li><li onclick="checkAnswer(this, false)">候補キーは主キーの中から選ぶ。</li><li onclick="checkAnswer(this, true)">候補キーの値はタプルごとに異なる。</li><li onclick="checkAnswer(this, false)">関係Rの候補キーは関係Rの属性の中から選ばない。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_6')">解答と解説を確認する</button>
+                <div id="test_ans_6" class="answer-area">
+                    <div class="answer-label">正解: 候補キーの値はタプルごとに異なる。</div>
+                    <div class="explanation">候補キーは一意性（各タプルを一意に識別できる）と極小性（余分な属性を含まない）を満たす属性集合です。値が同じタプルは存在できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q7 : テストモード (4択)</div>
+                <div class="question-text">データレイクとデータウェアハウスの違いに関する記述として、最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">データレイクは構造化データのみを保存し、データウェアハウスは非構造化データのみを保存する。</li><li onclick="checkAnswer(this, false)">データレイクはスキーマを事前に厳密に定義してからデータを保存するが、データウェアハウスはスキーマを定義しない。</li><li onclick="checkAnswer(this, true)">データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</li><li onclick="checkAnswer(this, false)">データレイクは「ETL」処理を前提とし、データウェアハウスは「ELT」処理を前提とする。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_7')">解答と解説を確認する</button>
+                <div id="test_ans_7" class="answer-area">
+                    <div class="answer-label">正解: データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</div>
+                    <div class="explanation">データレイクは形式を問わず生データを蓄積し（機械学習などに有効）、データウェアハウスは主にBIや集計分析用に整理された構造化データを扱います。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q8 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ダーティリード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_8')">解答と解説を確認する</button>
+                <div id="test_ans_8" class="answer-area">
+                    <div class="answer-label">正解: 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</div>
+                    <div class="explanation">ダーティリードは、未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q9 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_9')">解答と解説を確認する</button>
+                <div id="test_ans_9" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q10 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_10')">解答と解説を確認する</button>
+                <div id="test_ans_10" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q11 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「RAG (Retrieval-Augmented Generation)」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_11')">解答と解説を確認する</button>
+                <div id="test_ans_11" class="answer-area">
+                    <div class="answer-label">正解: 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</div>
+                    <div class="explanation">RAG (Retrieval-Augmented Generation)は、質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組みとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q12 : テストモード (4択)</div>
+                <div class="question-text">更新前情報と更新後情報をログとして利用する DBMS において、ログを先に書き出すWAL(Write Ahead Log) プロトコルに従うとして、処理を正しい順番に並べたものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">トランザクション開始 -> データベース更新 -> 更新前ログ -> 更新後ログ -> コミット -> トランザクション終了</li><li onclick="checkAnswer(this, true)">トランザクション開始 -> 更新前ログ -> 更新後ログ -> データベース更新 -> コミット -> トランザクション終了</li><li onclick="checkAnswer(this, false)">トランザクション開始 -> 更新前ログ -> データベース更新 -> 更新後ログ -> トランザクション終了 -> コミット</li><li onclick="checkAnswer(this, false)">データベース更新 -> トランザクション開始 -> 更新前ログ -> 更新後ログ -> コミット -> トランザクション終了</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_12')">解答と解説を確認する</button>
+                <div id="test_ans_12" class="answer-area">
+                    <div class="answer-label">正解: トランザクション開始 -> 更新前ログ -> 更新後ログ -> データベース更新 -> コミット -> トランザクション終了</div>
+                    <div class="explanation">WALプロトコルでは、データベース本体を書き換える前に、必ず更新前と更新後のログを安定記憶に書き出します。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q13 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールフォワード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_13')">解答と解説を確認する</button>
+                <div id="test_ans_13" class="answer-area">
+                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="explanation">ロールフォワードは、コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q14 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_14')">解答と解説を確認する</button>
+                <div id="test_ans_14" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q15 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールフォワード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_15')">解答と解説を確認する</button>
+                <div id="test_ans_15" class="answer-area">
+                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="explanation">ロールフォワードは、コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q16 : テストモード (4択)</div>
+                <div class="question-text">B+木インデックスに関する特徴として適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">根から葉までの高さがすべて同じに保たれる。</li><li onclick="checkAnswer(this, false)">葉ノード同士が順序付きで連結されているため、範囲検索に強い。</li><li onclick="checkAnswer(this, true)">実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</li><li onclick="checkAnswer(this, false)">ハッシュインデックスと比較して、等価検索だけでなく範囲検索やソートにも利用しやすい。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_16')">解答と解説を確認する</button>
+                <div id="test_ans_16" class="answer-area">
+                    <div class="answer-label">正解: 実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</div>
+                    <div class="explanation">B+木では、実データへのポインタは「葉ノードのみ」に格納されます。内部ノードは探索のための道しるべ（キーのみ）を持ちます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q17 : テストモード (4択)</div>
+                <div class="question-text">複合インデックス `idx_sample(A, B, C)` を作成した。このインデックスが最も有効に機能しにくい（左端一致の原則から外れる）検索条件はどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">WHERE A = 1 AND B = 2 AND C = 3</li><li onclick="checkAnswer(this, false)">WHERE A = 1 AND B = 2</li><li onclick="checkAnswer(this, false)">WHERE A = 1</li><li onclick="checkAnswer(this, true)">WHERE B = 2 AND C = 3</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_17')">解答と解説を確認する</button>
+                <div id="test_ans_17" class="answer-area">
+                    <div class="answer-label">正解: WHERE B = 2 AND C = 3</div>
+                    <div class="explanation">複合インデックスは指定した列の順（この場合はA→B→C）でソートされます。先頭列であるAが検索条件に含まれていないと、インデックスによる効率的な絞り込みができません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q18 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_18')">解答と解説を確認する</button>
+                <div id="test_ans_18" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q19 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_19')">解答と解説を確認する</button>
+                <div id="test_ans_19" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q20 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_20')">解答と解説を確認する</button>
+                <div id="test_ans_20" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q21 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_21')">解答と解説を確認する</button>
+                <div id="test_ans_21" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q22 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_22')">解答と解説を確認する</button>
+                <div id="test_ans_22" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q23 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「行指向格納」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, true)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_23')">解答と解説を確認する</button>
+                <div id="test_ans_23" class="answer-area">
+                    <div class="answer-label">正解: 1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</div>
+                    <div class="explanation">行指向格納は、1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いているとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q24 : テストモード (4択)</div>
+                <div class="question-text">B+木インデックスに関する特徴として適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">根から葉までの高さがすべて同じに保たれる。</li><li onclick="checkAnswer(this, false)">葉ノード同士が順序付きで連結されているため、範囲検索に強い。</li><li onclick="checkAnswer(this, true)">実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</li><li onclick="checkAnswer(this, false)">ハッシュインデックスと比較して、等価検索だけでなく範囲検索やソートにも利用しやすい。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_24')">解答と解説を確認する</button>
+                <div id="test_ans_24" class="answer-area">
+                    <div class="answer-label">正解: 実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</div>
+                    <div class="explanation">B+木では、実データへのポインタは「葉ノードのみ」に格納されます。内部ノードは探索のための道しるべ（キーのみ）を持ちます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q25 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_25')">解答と解説を確認する</button>
+                <div id="test_ans_25" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q26 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_26')">解答と解説を確認する</button>
+                <div id="test_ans_26" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q27 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_27')">解答と解説を確認する</button>
+                <div id="test_ans_27" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q28 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_28')">解答と解説を確認する</button>
+                <div id="test_ans_28" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q29 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_29')">解答と解説を確認する</button>
+                <div id="test_ans_29" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q30 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_30')">解答と解説を確認する</button>
+                <div id="test_ans_30" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q31 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_31')">解答と解説を確認する</button>
+                <div id="test_ans_31" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q32 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「非クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_32')">解答と解説を確認する</button>
+                <div id="test_ans_32" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
+                    <div class="explanation">非クラスタ化索引は、索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q33 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_33')">解答と解説を確認する</button>
+                <div id="test_ans_33" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
+                    <div class="explanation">クラスタ化索引は、索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q34 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ダーティリード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_34')">解答と解説を確認する</button>
+                <div id="test_ans_34" class="answer-area">
+                    <div class="answer-label">正解: 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</div>
+                    <div class="explanation">ダーティリードは、未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q35 : テストモード (4択)</div>
+                <div class="question-text">関係モデルの候補キーの説明のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">一つの関係に候補キーが複数あってはならない。</li><li onclick="checkAnswer(this, false)">候補キーは主キーの中から選ぶ。</li><li onclick="checkAnswer(this, true)">候補キーの値はタプルごとに異なる。</li><li onclick="checkAnswer(this, false)">関係Rの候補キーは関係Rの属性の中から選ばない。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_35')">解答と解説を確認する</button>
+                <div id="test_ans_35" class="answer-area">
+                    <div class="answer-label">正解: 候補キーの値はタプルごとに異なる。</div>
+                    <div class="explanation">候補キーは一意性（各タプルを一意に識別できる）と極小性（余分な属性を含まない）を満たす属性集合です。値が同じタプルは存在できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q36 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「選択率」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_36')">解答と解説を確認する</button>
+                <div id="test_ans_36" class="answer-area">
+                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
+                    <div class="explanation">選択率は、条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q37 : テストモード (4択)</div>
+                <div class="question-text">B+木インデックスに関する特徴として適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">根から葉までの高さがすべて同じに保たれる。</li><li onclick="checkAnswer(this, false)">葉ノード同士が順序付きで連結されているため、範囲検索に強い。</li><li onclick="checkAnswer(this, true)">実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</li><li onclick="checkAnswer(this, false)">ハッシュインデックスと比較して、等価検索だけでなく範囲検索やソートにも利用しやすい。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_37')">解答と解説を確認する</button>
+                <div id="test_ans_37" class="answer-area">
+                    <div class="answer-label">正解: 実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</div>
+                    <div class="explanation">B+木では、実データへのポインタは「葉ノードのみ」に格納されます。内部ノードは探索のための道しるべ（キーのみ）を持ちます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q38 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_38')">解答と解説を確認する</button>
+                <div id="test_ans_38" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q39 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_39')">解答と解説を確認する</button>
+                <div id="test_ans_39" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q40 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_40')">解答と解説を確認する</button>
+                <div id="test_ans_40" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q41 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールフォワード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_41')">解答と解説を確認する</button>
+                <div id="test_ans_41" class="answer-area">
+                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="explanation">ロールフォワードは、コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q42 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「LSH (Locality Sensitive Hashing)」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_42')">解答と解説を確認する</button>
+                <div id="test_ans_42" class="answer-area">
+                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q43 : テストモード (4択)</div>
+                <div class="question-text">関係モデルの候補キーの説明のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">一つの関係に候補キーが複数あってはならない。</li><li onclick="checkAnswer(this, false)">候補キーは主キーの中から選ぶ。</li><li onclick="checkAnswer(this, true)">候補キーの値はタプルごとに異なる。</li><li onclick="checkAnswer(this, false)">関係Rの候補キーは関係Rの属性の中から選ばない。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_43')">解答と解説を確認する</button>
+                <div id="test_ans_43" class="answer-area">
+                    <div class="answer-label">正解: 候補キーの値はタプルごとに異なる。</div>
+                    <div class="explanation">候補キーは一意性（各タプルを一意に識別できる）と極小性（余分な属性を含まない）を満たす属性集合です。値が同じタプルは存在できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q44 : テストモード (4択)</div>
+                <div class="question-text">結合アルゴリズムのうち、一方の関係の各行に対して、もう一方の関係を毎回先頭から読み込んで照合する方式はどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ハッシュ結合 (Hash Join)</li><li onclick="checkAnswer(this, false)">ソートマージ結合 (Sort Merge Join)</li><li onclick="checkAnswer(this, true)">入れ子ループ結合 (Nested Loop Join)</li><li onclick="checkAnswer(this, false)">自然結合 (Natural Join)</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_44')">解答と解説を確認する</button>
+                <div id="test_ans_44" class="answer-area">
+                    <div class="answer-label">正解: 入れ子ループ結合 (Nested Loop Join)</div>
+                    <div class="explanation">入れ子ループ結合は、外側表の1行ごとに内側表を全走査（または索引走査）する方式です。大表同士の結合では非常に遅くなる可能性があります。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q45 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_45')">解答と解説を確認する</button>
+                <div id="test_ans_45" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q46 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_46')">解答と解説を確認する</button>
+                <div id="test_ans_46" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q47 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「選択率」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_47')">解答と解説を確認する</button>
+                <div id="test_ans_47" class="answer-area">
+                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
+                    <div class="explanation">選択率は、条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q48 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「非クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_48')">解答と解説を確認する</button>
+                <div id="test_ans_48" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
+                    <div class="explanation">非クラスタ化索引は、索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q49 : テストモード (4択)</div>
+                <div class="question-text">B+木インデックスに関する特徴として適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">根から葉までの高さがすべて同じに保たれる。</li><li onclick="checkAnswer(this, false)">葉ノード同士が順序付きで連結されているため、範囲検索に強い。</li><li onclick="checkAnswer(this, true)">実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</li><li onclick="checkAnswer(this, false)">ハッシュインデックスと比較して、等価検索だけでなく範囲検索やソートにも利用しやすい。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_49')">解答と解説を確認する</button>
+                <div id="test_ans_49" class="answer-area">
+                    <div class="answer-label">正解: 実データへのポインタは内部ノード（中間ノード）と葉ノードの両方に格納される。</div>
+                    <div class="explanation">B+木では、実データへのポインタは「葉ノードのみ」に格納されます。内部ノードは探索のための道しるべ（キーのみ）を持ちます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q50 : テストモード (4択)</div>
+                <div class="question-text">ANSI/SPARC3層スキーマに関する記述として、適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</li><li onclick="checkAnswer(this, false)">外部スキーマは、概念スキーマが変化しても応用プログラムができるだけ影響を受けないようにするための考え方である。</li><li onclick="checkAnswer(this, false)">ANSI/SPARC3層スキーマの意義は、物理的データ独立性及び論理的データ独立性を確保することである。</li><li onclick="checkAnswer(this, false)">内部スキーマは、概念スキーマをコンピュータ上に実装するための記述である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_50')">解答と解説を確認する</button>
+                <div id="test_ans_50" class="answer-area">
+                    <div class="answer-label">正解: 関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</div>
+                    <div class="explanation">ビューやサブスキーマは、利用者ごとの見え方を表す「外部スキーマ」に相当します。概念スキーマはデータベース全体の論理的な構造を指します。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q51 : テストモード (4択)</div>
+                <div class="question-text">データレイクとデータウェアハウスの違いに関する記述として、最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">データレイクは構造化データのみを保存し、データウェアハウスは非構造化データのみを保存する。</li><li onclick="checkAnswer(this, false)">データレイクはスキーマを事前に厳密に定義してからデータを保存するが、データウェアハウスはスキーマを定義しない。</li><li onclick="checkAnswer(this, true)">データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</li><li onclick="checkAnswer(this, false)">データレイクは「ETL」処理を前提とし、データウェアハウスは「ELT」処理を前提とする。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_51')">解答と解説を確認する</button>
+                <div id="test_ans_51" class="answer-area">
+                    <div class="answer-label">正解: データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</div>
+                    <div class="explanation">データレイクは形式を問わず生データを蓄積し（機械学習などに有効）、データウェアハウスは主にBIや集計分析用に整理された構造化データを扱います。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q52 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールバック」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_52')">解答と解説を確認する</button>
+                <div id="test_ans_52" class="answer-area">
+                    <div class="answer-label">正解: 未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</div>
+                    <div class="explanation">ロールバックは、未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q53 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_53')">解答と解説を確認する</button>
+                <div id="test_ans_53" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
+                    <div class="explanation">クラスタ化索引は、索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q54 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_54')">解答と解説を確認する</button>
+                <div id="test_ans_54" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q55 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_55')">解答と解説を確認する</button>
+                <div id="test_ans_55" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q56 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_56')">解答と解説を確認する</button>
+                <div id="test_ans_56" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q57 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_57')">解答と解説を確認する</button>
+                <div id="test_ans_57" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
+                    <div class="explanation">クラスタ化索引は、索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q58 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_58')">解答と解説を確認する</button>
+                <div id="test_ans_58" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q59 : テストモード (4択)</div>
+                <div class="question-text">関係代数における直積に関する記述として、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_59')">解答と解説を確認する</button>
+                <div id="test_ans_59" class="answer-area">
+                    <div class="answer-label">正解: 二つの関係における、全てのタプルの組合せの集合である。</div>
+                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q60 : テストモード (4択)</div>
+                <div class="question-text">関係演算において、商演算と同等な結果が得られる演算の組合せはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">直積演算と差演算と選択演算</li><li onclick="checkAnswer(this, false)">直積演算と選択演算と和演算</li><li onclick="checkAnswer(this, true)">直積演算と射影演算と差演算</li><li onclick="checkAnswer(this, false)">直積演算と射影演算と和演算</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_60')">解答と解説を確認する</button>
+                <div id="test_ans_60" class="answer-area">
+                    <div class="answer-label">正解: 直積演算と射影演算と差演算</div>
+                    <div class="explanation">商演算は直積、差、射影の組み合わせで表現できます（候補集合を直積で作り、不足分を差で求め、対象属性を射影で取り出す）。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q61 : テストモード (4択)</div>
+                <div class="question-text">高次元データの類似検索（ベクトル検索）において、厳密な探索の代わりに「近似最近傍探索（ANN）」がよく使われる理由として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">次元数が増えると距離の違いが明確になり、k-d treeによる厳密な空間分割が極めて高速になるため。</li><li onclick="checkAnswer(this, true)">高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</li><li onclick="checkAnswer(this, false)">ベクトルデータベースはSQLのWHERE句による完全一致検索しかサポートしていないため。</li><li onclick="checkAnswer(this, false)">テキストデータや画像データは、ベクトル化すると必ず低次元に圧縮されるため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_61')">解答と解説を確認する</button>
+                <div id="test_ans_61" class="answer-area">
+                    <div class="answer-label">正解: 高次元では「次元の呪い」により厳密探索の計算コストが爆発的に増大するため、少しの誤差を許容して速度を優先するため。</div>
+                    <div class="explanation">高次元データでは距離の集中や空間の広がりにより、厳密な最近傍探索は全表走査と変わらないコストになります。そのため、LSHやHNSWなどの近似手法が用いられます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q62 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_62')">解答と解説を確認する</button>
+                <div id="test_ans_62" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q63 : テストモード (4択)</div>
+                <div class="question-text">厳格な2相ロッキングプロトコルと表ロックを適用して、同時実行している他のトランザクションの処理結果に影響を与えないようにする。実現されるトランザクションの隔離性水準はどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">READ UNCOMMITTED</li><li onclick="checkAnswer(this, false)">REPEATABLE READ</li><li onclick="checkAnswer(this, false)">READ COMMITTED</li><li onclick="checkAnswer(this, true)">SERIALIZABLE</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_63')">解答と解説を確認する</button>
+                <div id="test_ans_63" class="answer-area">
+                    <div class="answer-label">正解: SERIALIZABLE</div>
+                    <div class="explanation">厳格な2相ロッキングと表ロックにより、他のトランザクションの影響を受けない直列実行と同等の SERIALIZABLE が実現されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q64 : テストモード (4択)</div>
+                <div class="question-text">関係代数における直積に関する記述として、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_64')">解答と解説を確認する</button>
+                <div id="test_ans_64" class="answer-area">
+                    <div class="answer-label">正解: 二つの関係における、全てのタプルの組合せの集合である。</div>
+                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q65 : テストモード (4択)</div>
+                <div class="question-text">ANSI/SPARC3層スキーマに関する記述として、適切でないものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</li><li onclick="checkAnswer(this, false)">外部スキーマは、概念スキーマが変化しても応用プログラムができるだけ影響を受けないようにするための考え方である。</li><li onclick="checkAnswer(this, false)">ANSI/SPARC3層スキーマの意義は、物理的データ独立性及び論理的データ独立性を確保することである。</li><li onclick="checkAnswer(this, false)">内部スキーマは、概念スキーマをコンピュータ上に実装するための記述である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_65')">解答と解説を確認する</button>
+                <div id="test_ans_65" class="answer-area">
+                    <div class="answer-label">正解: 関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</div>
+                    <div class="explanation">ビューやサブスキーマは、利用者ごとの見え方を表す「外部スキーマ」に相当します。概念スキーマはデータベース全体の論理的な構造を指します。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q66 : テストモード (4択)</div>
+                <div class="question-text">地理空間データの検索において、R-treeインデックスの特徴として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">空間を軸に沿って再帰的に2分割していく木構造である。</li><li onclick="checkAnswer(this, true)">空間オブジェクトを囲む最小外接矩形（MBR）を用いて階層的に管理し、検索範囲と重なる矩形をたどる。</li><li onclick="checkAnswer(this, false)">データの分布に関係なく、空間を一定サイズの格子（グリッド）に分割して管理する。</li><li onclick="checkAnswer(this, false)">地球上の緯度経度に基づく球面距離を、ユークリッド距離に変換してハッシュ化する。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_66')">解答と解説を確認する</button>
+                <div id="test_ans_66" class="answer-area">
+                    <div class="answer-label">正解: 空間オブジェクトを囲む最小外接矩形（MBR）を用いて階層的に管理し、検索範囲と重なる矩形をたどる。</div>
+                    <div class="explanation">R-treeは空間データを最小外接矩形(MBR)で囲み、B+木のような階層構造で管理します。検索範囲と重ならない矩形（枝）を効率よく刈り込めます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q67 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「列指向格納」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, true)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_67')">解答と解説を確認する</button>
+                <div id="test_ans_67" class="answer-area">
+                    <div class="answer-label">正解: 属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</div>
+                    <div class="explanation">列指向格納は、属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いているとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q68 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_68')">解答と解説を確認する</button>
+                <div id="test_ans_68" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q69 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「HNSW」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_69')">解答と解説を確認する</button>
+                <div id="test_ans_69" class="answer-area">
+                    <div class="answer-label">正解: 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</div>
+                    <div class="explanation">HNSWは、近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q70 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_70')">解答と解説を確認する</button>
+                <div id="test_ans_70" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q71 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「LSH (Locality Sensitive Hashing)」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_71')">解答と解説を確認する</button>
+                <div id="test_ans_71" class="answer-area">
+                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q72 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_72')">解答と解説を確認する</button>
+                <div id="test_ans_72" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q73 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_73')">解答と解説を確認する</button>
+                <div id="test_ans_73" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
+                    <div class="explanation">クラスタ化索引は、索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q74 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールフォワード」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_74')">解答と解説を確認する</button>
+                <div id="test_ans_74" class="answer-area">
+                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="explanation">ロールフォワードは、コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q75 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_75')">解答と解説を確認する</button>
+                <div id="test_ans_75" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q76 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_76')">解答と解説を確認する</button>
+                <div id="test_ans_76" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q77 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_77')">解答と解説を確認する</button>
+                <div id="test_ans_77" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q78 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「LSH (Locality Sensitive Hashing)」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_78')">解答と解説を確認する</button>
+                <div id="test_ans_78" class="answer-area">
+                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q79 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_79')">解答と解説を確認する</button>
+                <div id="test_ans_79" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q80 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_80')">解答と解説を確認する</button>
+                <div id="test_ans_80" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q81 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_81')">解答と解説を確認する</button>
+                <div id="test_ans_81" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q82 : テストモード (4択)</div>
+                <div class="question-text">データレイクとデータウェアハウスの違いに関する記述として、最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">データレイクは構造化データのみを保存し、データウェアハウスは非構造化データのみを保存する。</li><li onclick="checkAnswer(this, false)">データレイクはスキーマを事前に厳密に定義してからデータを保存するが、データウェアハウスはスキーマを定義しない。</li><li onclick="checkAnswer(this, true)">データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</li><li onclick="checkAnswer(this, false)">データレイクは「ETL」処理を前提とし、データウェアハウスは「ELT」処理を前提とする。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_82')">解答と解説を確認する</button>
+                <div id="test_ans_82" class="answer-area">
+                    <div class="answer-label">正解: データレイクは多様な生データ（構造化・半構造化・非構造化）をそのまま蓄積し、データウェアハウスは分析用に整理・統合されたデータを蓄積する。</div>
+                    <div class="explanation">データレイクは形式を問わず生データを蓄積し（機械学習などに有効）、データウェアハウスは主にBIや集計分析用に整理された構造化データを扱います。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q83 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールバック」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_83')">解答と解説を確認する</button>
+                <div id="test_ans_83" class="answer-area">
+                    <div class="answer-label">正解: 未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</div>
+                    <div class="explanation">ロールバックは、未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q84 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_84')">解答と解説を確認する</button>
+                <div id="test_ans_84" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q85 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_85')">解答と解説を確認する</button>
+                <div id="test_ans_85" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q86 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_86')">解答と解説を確認する</button>
+                <div id="test_ans_86" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q87 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_87')">解答と解説を確認する</button>
+                <div id="test_ans_87" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q88 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_88')">解答と解説を確認する</button>
+                <div id="test_ans_88" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q89 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_89')">解答と解説を確認する</button>
+                <div id="test_ans_89" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q90 : テストモード (4択)</div>
+                <div class="question-text">2相ロックプロトコル (2PL) に関する記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">すべてのロックをトランザクション終了時まで保持しなければならない。</li><li onclick="checkAnswer(this, true)">一度でもアンロックを始めたら、その後は新たなロックを取得できない。</li><li onclick="checkAnswer(this, false)">読出しロック同士であっても、同時に保持することはできない。</li><li onclick="checkAnswer(this, false)">2相ロックプロトコルに従うスケジュールは、必ずデッドロックを回避できる。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_90')">解答と解説を確認する</button>
+                <div id="test_ans_90" class="answer-area">
+                    <div class="answer-label">正解: 一度でもアンロックを始めたら、その後は新たなロックを取得できない。</div>
+                    <div class="explanation">2PLは「施錠相（ロック取得のみ）」と「解錠相（アンロックのみ）」に分かれ、解錠相に入ると新たなロックは取得できません。デッドロックは回避できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q91 : テストモード (4択)</div>
+                <div class="question-text">関係代数における直積に関する記述として、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_91')">解答と解説を確認する</button>
+                <div id="test_ans_91" class="answer-area">
+                    <div class="answer-label">正解: 二つの関係における、全てのタプルの組合せの集合である。</div>
+                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q92 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「クラスタ化索引」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_92')">解答と解説を確認する</button>
+                <div id="test_ans_92" class="answer-area">
+                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
+                    <div class="explanation">クラスタ化索引は、索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすいとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q93 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ロールバック」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</li><li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_93')">解答と解説を確認する</button>
+                <div id="test_ans_93" class="answer-area">
+                    <div class="answer-label">正解: 未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理</div>
+                    <div class="explanation">ロールバックは、未完了・中断したトランザクションの更新をログ（更新前ログ）を用いて取り消す処理として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q94 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_94')">解答と解説を確認する</button>
+                <div id="test_ans_94" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q95 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「ファントム」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_95')">解答と解説を確認する</button>
+                <div id="test_ans_95" class="answer-area">
+                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
+                    <div class="explanation">ファントムは、同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象として定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q96 : テストモード (4択)</div>
+                <div class="question-text">関係代数における直積に関する記述として、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_96')">解答と解説を確認する</button>
+                <div id="test_ans_96" class="answer-area">
+                    <div class="answer-label">正解: 二つの関係における、全てのタプルの組合せの集合である。</div>
+                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q97 : テストモード (4択)</div>
+                <div class="question-text">問合せ最適化における「選択演算の早期適用」の目的として最も適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">必要な列だけを残すことで、1行あたりのデータサイズを小さくするため。</li><li onclick="checkAnswer(this, false)">結合順序を動的に変更して、常にハッシュ結合を選択させるため。</li><li onclick="checkAnswer(this, false)">インデックスがなくても常にB+木走査を利用できるようにするため。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_97')">解答と解説を確認する</button>
+                <div id="test_ans_97" class="answer-area">
+                    <div class="answer-label">正解: 結合処理を行う前に条件で絞り込むことで、中間結果のサイズを小さくするため。</div>
+                    <div class="explanation">選択演算（行の絞り込み）を結合前に行うことで、結合の対象となるデータ量を減らし、処理メモリやディスクI/Oを大幅に削減できます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q98 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「厳密なスケジュール」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_98')">解答と解説を確認する</button>
+                <div id="test_ans_98" class="answer-area">
+                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
+                    <div class="explanation">厳密なスケジュールは、他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュールとして定義されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q99 : テストモード (4択)</div>
+                <div class="question-text">ビューのSELECT 権限に関する記述のうち、適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_99')">解答と解説を確認する</button>
+                <div id="test_ans_99" class="answer-area">
+                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card">
+                <div class="question-type">Q100 : テストモード (4択)</div>
+                <div class="question-text">次のうち、「転置インデックス」の記述として正しいものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">属性ごとにまとめて格納する方式で、特定属性に対する集計処理（OLAP）に向いている</li><li onclick="checkAnswer(this, false)">1レコードの各属性をまとめて格納する方式で、1件のレコード全体を取り出す処理（OLTP）に向いている</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_100')">解答と解説を確認する</button>
+                <div id="test_ans_100" class="answer-area">
+                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="explanation">転置インデックスは、単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられるとして定義されます。</div>
+                </div>
+            </div>
+    
+        </div>
+        
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+            }
+        }
+
+        function checkAnswer(el, isCorrect) {
+            const parent = el.parentElement;
+            const items = parent.getElementsByTagName('li');
+            for(let i=0; i<items.length; i++){
+                items[i].classList.remove('selected', 'correct', 'incorrect');
+            }
+            if (isCorrect) {
+                el.classList.add('selected', 'correct');
+            } else {
+                el.classList.add('selected', 'incorrect');
+            }
+        }
+    </script>
+</body>
+</html>
