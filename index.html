@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>戦略的データベース演習 第14回完全原文再現＆100問テスト</title>
+    <title>戦略的データベース演習 講義要約＆テスト(ビジュアル拡張版)</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
@@ -81,11 +81,31 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
         }
-        .summary-section ul {
-            padding-left: 20px;
+        
+        /* 図解・表用スタイル */
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
         }
-        .summary-section li {
-            margin-bottom: 8px;
+        .db-table th, .db-table td {
+            border: 1px solid #bdc3c7;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .db-table th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .diagram {
+            background: #fdfefe;
+            border: 1px solid #dcdde1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            text-align: center;
         }
 
         .controls {
@@ -124,24 +144,6 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
-        
-        /* 表や再現ブロックのスタイル */
-        .db-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 0.9rem;
-        }
-        .db-table th, .db-table td {
-            border: 1px solid #bdc3c7;
-            padding: 8px 12px;
-            text-align: center;
-        }
-        .db-table th {
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-        
         .code-block {
             background-color: #272822;
             color: #f8f8f2;
@@ -152,7 +154,6 @@
             overflow-x: auto;
             margin: 10px 0;
         }
-
         .timeline-box {
             background: #f8f9fa;
             border: 1px solid #dcdde1;
@@ -164,7 +165,6 @@
             margin: 15px 0;
             line-height: 1.4;
         }
-
         .options {
             list-style: none;
             padding: 0;
@@ -235,98 +235,143 @@
 <body>
     <header>
         <h1>戦略的データベース演習</h1>
-        <p>第14回原文忠実完全再現 ＆ 100問演習</p>
+        <p>第14回原文忠実完全再現 ＆ ビジュアル暗記モード</p>
     </header>
     <div class="container">
         
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('memorize_tab')">暗記モード (体系的要約)</div>
+            <div class="tab active" onclick="switchTab('memorize_tab')">暗記モード (ビジュアル詳細解説)</div>
             <div class="tab" onclick="switchTab('test_tab')">テストモード (100問)</div>
         </div>
 
         <!-- 暗記モードコンテンツ -->
         <div id="memorize_tab" class="tab-content active">
-            <div class="summary-section">
-                <h2>第1回: データモデルと3層スキーマ構造</h2>
-                <ul>
-                    <li><strong>DBMS三大機能:</strong> メタデータ管理、問合せ処理、トランザクション管理。</li>
-                    <li><strong>データモデル:</strong> データをどのような構造で整理するかを決める概念（関係モデルが主流）。</li>
-                    <li><strong>3層スキーマ:</strong> 
-                        <ul>
-                            <li>外部スキーマ: ユーザごとの見え方（ビューなど）</li>
-                            <li>概念スキーマ: データベース全体の論理構造</li>
-                            <li>内部スキーマ: 物理的な格納方法</li>
-                        </ul>
-                    </li>
-                    <li><strong>データ独立性:</strong> 論理的独立性（概念の変更が外部に影響しない）、物理的独立性（内部の変更が概念に影響しない）。</li>
-                </ul>
-            </div>
+            
+<div class="summary-section">
+    <h2>第1回: データモデルと3層スキーマ構造</h2>
+    <p>データベースシステムの基礎。データ独立性を確保するための3層スキーマが重要。</p>
+    <table class="db-table">
+        <tr><th>スキーマ</th><th>定義するもの</th><th>データ独立性</th></tr>
+        <tr><td><strong>外部スキーマ</strong></td><td>ユーザやアプリから見たデータの見え方（ビューなど）</td><td>論理的データ独立性</td></tr>
+        <tr><td><strong>概念スキーマ</strong></td><td>データベース全体の論理的構造（テーブル定義など）</td><td>論理・物理の境界</td></tr>
+        <tr><td><strong>内部スキーマ</strong></td><td>物理的な格納方法（ファイル構造、インデックスなど）</td><td>物理的データ独立性</td></tr>
+    </table>
+    <p>※<strong>論理的データ独立性:</strong> 概念スキーマが変わっても外部スキーマ(アプリ)に影響しない。<br>
+    ※<strong>物理的データ独立性:</strong> 内部スキーマが変わっても概念スキーマに影響しない。</p>
+</div>
 
-            <div class="summary-section">
-                <h2>第2回: 関係データモデルとキー制約</h2>
-                <ul>
-                    <li><strong>関係 (Relation):</strong> 表のこと。行＝タプル、列＝属性、ドメイン＝属性の取りうる値の集合。</li>
-                    <li><strong>キーの分類:</strong>
-                        <ul>
-                            <li>スーパーキー: 行を一意に識別できる属性の組。</li>
-                            <li>候補キー: 一意性と極小性を満たすスーパーキー。</li>
-                            <li>主キー: 候補キーから選ばれた1つ（NULL不可）。</li>
-                            <li>外部キー: 他の表の主キーを参照し、参照整合性制約を保つ。</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<div class="summary-section">
+    <h2>第2回: 関係データモデルとキー制約</h2>
+    <p>データを「表」として扱い、制約によって整合性を保つ。</p>
+    <table class="db-table">
+        <tr><th>キーの種類</th><th>説明</th></tr>
+        <tr><td><strong>スーパーキー</strong></td><td>行を一意に識別できる属性の組（余分な属性を含んでもよい）</td></tr>
+        <tr><td><strong>候補キー</strong></td><td>一意性と<strong>極小性</strong>を満たすスーパーキー（値はタプルごとに異なる）</td></tr>
+        <tr><td><strong>主キー</strong></td><td>候補キーから選ばれた1つ。<strong>NOT NULL（実体整合性制約）</strong></td></tr>
+        <tr><td><strong>外部キー</strong></td><td>他の表の主キーを参照する。<strong>参照整合性制約</strong>を保つ</td></tr>
+    </table>
+</div>
 
-            <div class="summary-section">
-                <h2>第3回: 関係(リレーショナル) 代数</h2>
-                <ul>
-                    <li><strong>集合演算:</strong> 和(UNION)、差(EXCEPT)、共通(INTERSECT)、直積(CROSS JOIN)。</li>
-                    <li><strong>関係演算:</strong>
-                        <ul>
-                            <li>選択 (Selection): 条件を満たす行を抽出。</li>
-                            <li>射影 (Projection): 特定の列を抽出。</li>
-                            <li>結合 (Join): 2つの関係を共通の属性で結びつける。</li>
-                            <li>商 (Division): 条件をすべて満たす組み合わせを求める演算。</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+<div class="summary-section">
+    <h2>第3回: 関係(リレーショナル) 代数</h2>
+    <p>関係演算（表から表を作る演算）の基本。</p>
+    <table class="db-table">
+        <tr><th>演算名</th><th>意味・特徴</th></tr>
+        <tr><td><strong>選択 (σ)</strong></td><td>条件を満たす<strong>行（タプル）</strong>を抽出する</td></tr>
+        <tr><td><strong>射影 (π)</strong></td><td>特定の<strong>列（属性）</strong>のみを抽出する</td></tr>
+        <tr><td><strong>直積 (×)</strong></td><td>2つの関係の<strong>全てのタプルの組合せ</strong>を生成する</td></tr>
+        <tr><td><strong>自然結合 (⋈)</strong></td><td>同じ名前の属性で等結合し、重複属性を1つにまとめる</td></tr>
+        <tr><td><strong>商 (÷)</strong></td><td>直積・差・射影の組み合わせで表現できる演算</td></tr>
+    </table>
+</div>
 
-            <div class="summary-section">
-                <h2>第4〜6回: SQLによる問合せ</h2>
-                <ul>
-                    <li><strong>評価順序:</strong> FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</li>
-                    <li><strong>副問合せ:</strong> SELECT文の入れ子。EXISTS/NOT EXISTS は存在判定で有用。NOT IN はNULLが含まれると結果がUNKNOWNになる落とし穴に注意。</li>
-                </ul>
-            </div>
+<div class="summary-section">
+    <h2>第4〜6回: SQLと副問合せ</h2>
+    <p>SQLの評価順序と副問合せの挙動の理解が必須。</p>
+    <div class="diagram">
+        <strong>【SQLの論理的評価順序】</strong><br>
+        FROM ➔ WHERE (行の絞り込み) ➔ GROUP BY ➔ HAVING (グループの絞り込み) ➔ SELECT ➔ ORDER BY
+    </div>
+    <ul>
+        <li><strong>相関副問合せ:</strong> 外側の問合せの行を1つ取得するたびに、内側の副問合せが再実行される。</li>
+        <li><strong>EXISTS:</strong> 条件を満たす行が「存在するか」のみを判定。NOT EXISTSは「誰の上司にもなっていない」などの否定条件に強い。</li>
+    </ul>
+</div>
 
-            <div class="summary-section">
-                <h2>第7〜8回: 正規化理論とスキーマ分解</h2>
-                <ul>
-                    <li><strong>第1正規形 (1NF):</strong> 繰り返し項目や複数値属性を排除。</li>
-                    <li><strong>第2正規形 (2NF):</strong> 部分関数従属性を排除。</li>
-                    <li><strong>第3正規形 (3NF):</strong> 推移的関数従属性を排除。情報無損失かつ関数従属性保存が両立。</li>
-                    <li><strong>ボイス・コッド正規形 (BCNF):</strong> すべての関数従属性 X→Y でXがスーパーキーであることを要求。</li>
-                </ul>
-            </div>
+<div class="summary-section">
+    <h2>第7〜8回: 正規化理論とスキーマ分解</h2>
+    <p>更新時異状を排除し、情報無損失分解を維持する。</p>
+    <table class="db-table">
+        <tr><th>正規形</th><th>前提</th><th>排除するもの (追加条件)</th></tr>
+        <tr><td><strong>1NF</strong></td><td>-</td><td>繰り返し項目、複数値属性、入れ子構造</td></tr>
+        <tr><td><strong>2NF</strong></td><td>1NF</td><td><strong>部分関数従属性</strong> (複合キーの一部だけで決まる属性)</td></tr>
+        <tr><td><strong>3NF</strong></td><td>2NF</td><td><strong>推移的関数従属性</strong> (キー以外の属性を経由して決まる属性)</td></tr>
+        <tr><td><strong>BCNF</strong></td><td>3NF</td><td>全ての関数従属性 X→Y で <strong>Xがスーパーキー</strong>であること</td></tr>
+        <tr><td><strong>4NF</strong></td><td>BCNF</td><td>自明でない<strong>多値従属性</strong> (Aが決まると独立したBの集合が決まる)</td></tr>
+        <tr><td><strong>5NF</strong></td><td>4NF</td><td>候補キーで含意されない非自明な<strong>結合従属性</strong></td></tr>
+    </table>
+    <p>※第3正規形までは<strong>「情報無損失分解」と「関数従属性保存」</strong>を必ず両立できるが、BCNFへの分解では関数従属性保存が失われることがある。</p>
+</div>
 
-            <div class="summary-section">
-                <h2>第9〜10回: トランザクション管理と同時実行制御</h2>
-                <ul>
-                    <li><strong>ACID特性:</strong> 原子性、一貫性、独立性、永続性。</li>
-                    <li><strong>2相ロックプロトコル (2PL):</strong> 施錠相と解錠相を分離。衝突直列化可能性を保証。</li>
-                    <li><strong>障害回復 (WAL):</strong> Write-Ahead Logging。コミット済みはREDO（ロールフォワード）、未コミットはUNDO（ロールバック）。</li>
-                </ul>
-            </div>
+<div class="summary-section">
+    <h2>第9〜10回: トランザクションと直列可能性</h2>
+    <p>同時実行制御において最も試験で狙われる「ロック」と「隔離性水準」。</p>
+    
+    <strong>【ロックの両立性マトリクス】</strong>
+    <table class="db-table" style="width:60%;">
+        <tr><th>既存のロック＼要求</th><th>読出し (共有)</th><th>書込み (排他)</th></tr>
+        <tr><td>読出し (共有)</td><td style="color:green;font-weight:bold;">○ 両立</td><td style="color:red;font-weight:bold;">× 待機</td></tr>
+        <tr><td>書込み (排他)</td><td style="color:red;font-weight:bold;">× 待機</td><td style="color:red;font-weight:bold;">× 待機</td></tr>
+    </table>
 
-            <div class="summary-section">
-                <h2>第11〜13回: インデックス・クエリ最適化・先進データ</h2>
-                <ul>
-                    <li><strong>B+木インデックス:</strong> 高さの低い木構造。葉ノードのみにポインタがあり連結されているため、範囲検索に強み。</li>
-                    <li><strong>クエリ最適化:</strong> 選択演算の早期適用により中間結果を最小化。</li>
-                    <li><strong>高次元データ/ベクトル検索:</strong> 次元の呪い回避のため、LSHやHNSWを用いた近似最近傍探索（ANN）を利用。</li>
-                </ul>
-            </div>
+    <br><strong>【隔離性水準と好ましくない現象】</strong>
+    <table class="db-table">
+        <tr><th>隔離性水準</th><th>ダーティリード<br>(未コミット読出)</th><th>繰返し不可能読出<br>(途中で値変化)</th><th>ファントム<br>(途中で行増減)</th></tr>
+        <tr><td><strong>SERIALIZABLE</strong></td><td>発生しない</td><td>発生しない</td><td>発生しない</td></tr>
+        <tr><td><strong>REPEATABLE READ</strong></td><td>発生しない</td><td>発生しない</td><td style="color:red;">発生し得る</td></tr>
+        <tr><td><strong>READ COMMITTED</strong></td><td>発生しない</td><td style="color:red;">発生し得る</td><td style="color:red;">発生し得る</td></tr>
+        <tr><td><strong>READ UNCOMMITTED</strong></td><td style="color:red;">発生し得る</td><td style="color:red;">発生し得る</td><td style="color:red;">発生し得る</td></tr>
+    </table>
+    <ul>
+        <li><strong>WAL (Write Ahead Log):</strong> DB更新前に「更新前ログ」と「更新後ログ」を必ず先に書き出す。</li>
+        <li><strong>厳密なスケジュール:</strong> 他のトランザクションが書いたデータを読み書きする場合、書いた側が終了(Commit/Abort)するまで待つ。</li>
+    </ul>
+</div>
+
+<div class="summary-section">
+    <h2>第11〜12回: インデックスとクエリ最適化</h2>
+    <table class="db-table">
+        <tr><th>インデックス</th><th>特徴・得意な検索</th></tr>
+        <tr><td><strong>B+木</strong></td><td>葉ノードにのみ実データへのポインタを持つ。葉同士が連結されており<strong>範囲検索やソート</strong>に強い。</td></tr>
+        <tr><td><strong>ハッシュ</strong></td><td>キーから格納位置を直接計算。<strong>等価検索</strong>に極めて強いが範囲検索には不向き。</td></tr>
+        <tr><td><strong>クラスタ化索引</strong></td><td>索引順とデータの物理配置が近い。範囲検索で連続ページを読みやすい。</td></tr>
+        <tr><td><strong>非クラスタ化索引</strong></td><td>索引順と物理配置が一致しない。大量行を読むと<strong>ランダムI/O</strong>が増加する。</td></tr>
+    </table>
+    
+    <br><strong>【結合アルゴリズム】</strong>
+    <table class="db-table">
+        <tr><th>方式</th><th>特徴</th></tr>
+        <tr><td><strong>Nested Loop Join</strong></td><td>外側1行ごとに内側を走査。外側が小さく、内側に索引がある場合に高速。大表同士は遅い。</td></tr>
+        <tr><td><strong>Sort Merge Join</strong></td><td>両方をソートしてから照合。</td></tr>
+        <tr><td><strong>Hash Join</strong></td><td>一方をメモリ上でハッシュ表にし照合。大容量の等結合に強い。</td></tr>
+    </table>
+    <p>※<strong>選択演算の早期適用:</strong> 結合前に条件で絞り込むことで、中間結果のサイズを小さくする（最適化の基本）。</p>
+</div>
+
+<div class="summary-section">
+    <h2>第13回: 空間・時系列・高次元データ</h2>
+    <table class="db-table">
+        <tr><th>データ環境</th><th>特徴</th></tr>
+        <tr><td><strong>データウェアハウス</strong></td><td>分析用に整理・統合された<strong>構造化データ</strong>を中心に蓄積。</td></tr>
+        <tr><td><strong>データレイク</strong></td><td>多様な生データ（非構造化・半構造化）をそのまま蓄積。</td></tr>
+    </table>
+    <ul>
+        <li><strong>空間データ:</strong> R-tree（最小外接矩形MBRで階層管理）。</li>
+        <li><strong>文書データ:</strong> 転置インデックス（単語→文書IDの集合）。</li>
+        <li><strong>高次元データ:</strong> 次元の呪いを避けるため、LSHやHNSWによる<strong>近似最近傍探索(ANN)</strong>を利用。</li>
+    </ul>
+</div>
+
         </div>
         
         <!-- テストモードコンテンツ -->
@@ -335,328 +380,245 @@
                 <button id="filter-btn" class="btn btn-filter" onclick="toggleFilter()">第14回確定問題のみ表示する (全15問)</button>
             </div>
 
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q1 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span>更新前情報と更新後情報をログとして利用する DBMS において、ログを先に書き出すWAL(Write Ahead Log) プロトコルに従うとして、処理①~⑥を正しい順番に並べたものはどれか。【平成24年春期・問17】<br>① begin transaction レコードを書き出す。<br>② データベースを更新する。<br>③ ログに更新前レコードを書き出す。<br>④ ログに更新後レコードを書き出す。<br>⑤ commit レコードを書き出す。<br>⑥ end transaction レコードを書き出す。</div>
+                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ア ①→②→③→④→⑤→⑥</li><li onclick="checkAnswer(this, true)">イ ①→③→④→②→⑤→⑥</li><li onclick="checkAnswer(this, false)">ウ ①→③→②→⑤→④→⑥</li><li onclick="checkAnswer(this, false)">エ ①→③→④→②→⑥→⑤</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_1')">解答と解説を確認する</button>
                 <div id="test_ans_1" class="answer-area">
-                    <div class="answer-label">正解: イ ①→③→④→②→⑤→⑥</div>
-                    <div class="explanation">WALプロトコルでは、データベース本体を書き換える前に、必ず更新前と更新後のログを安定記憶に書き出します。（イが正解）</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q2 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_2')">解答と解説を確認する</button>
-                <div id="test_ans_2" class="answer-area">
-                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
-                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q3 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_3')">解答と解説を確認する</button>
-                <div id="test_ans_3" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q4 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「クラスタ化索引」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_4')">解答と解説を確認する</button>
-                <div id="test_ans_4" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
-                    <div class="explanation">クラスタ化索引は、「索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q5 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_5')">解答と解説を確認する</button>
-                <div id="test_ans_5" class="answer-area">
-                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
-                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q6 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ファントム」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_6')">解答と解説を確認する</button>
-                <div id="test_ans_6" class="answer-area">
-                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
-                    <div class="explanation">ファントムは、「同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card fixed">
-                <div class="question-type">Q7 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係代数における直積に関する記述として、適切なものはどれか。【令和2年秋期・問9】</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_7')">解答と解説を確認する</button>
-                <div id="test_ans_7" class="answer-area">
-                    <div class="answer-label">正解: 二つの関係における、全てのタプルの組合せの集合である。</div>
-                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q8 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データベース全体の論理的な構造を定義するもの</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, true)">データを読み込む際に取得するロック。他の共有ロックと競合しない</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_8')">解答と解説を確認する</button>
-                <div id="test_ans_8" class="answer-area">
-                    <div class="answer-label">正解: データを読み込む際に取得するロック。他の共有ロックと競合しない</div>
-                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q9 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_9')">解答と解説を確認する</button>
-                <div id="test_ans_9" class="answer-area">
-                    <div class="answer-label">正解: 2つの関係のすべてのタプルの組み合わせを生成する演算</div>
-                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q10 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「排他ロック」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_10')">解答と解説を確認する</button>
-                <div id="test_ans_10" class="answer-area">
-                    <div class="answer-label">正解: データを更新する際に取得するロック。他のいかなるロックとも競合する</div>
-                    <div class="explanation">排他ロックは、「データを更新する際に取得するロック。他のいかなるロックとも競合する」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card fixed">
-                <div class="question-type">Q11 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>"社員"表と"人事異動"表から社員ごとの勤務成績の平均を求める適切な SQL 文はどれか。ここで、求める項目は、社員コード、社員名,勤務成績(平均)の3項目とする。【平成21年春期・問9】<br>
-<br><b>社員</b>
-<table class="db-table">
-<tr><th>社員コード</th><th>社員名</th><th>性別</th><th>生年月日</th><th>入社年月日</th></tr>
-<tr><td>01553</td><td>太田 由美</td><td>女</td><td>1970-03-10</td><td>1990-04-01</td></tr>
-<tr><td>S3781</td><td>佐藤義男</td><td>男</td><td>1943-11-20</td><td>1975-06-11</td></tr>
-<tr><td>08665</td><td>太田 由美</td><td>女</td><td>1978-10-13</td><td>1999-04-01</td></tr>
-</table>
-<b>人事異動</b>
-<table class="db-table">
-<tr><th>社員コード</th><th>配属部門</th><th>配属年月日</th><th>担当勤務内容</th><th>勤務成績</th></tr>
-<tr><td>01553</td><td>総務部</td><td>1990-04-01</td><td>広報(社内報)</td><td>69.0</td></tr>
-<tr><td>01553</td><td>営業部</td><td>1998-07-01</td><td>顧客管理</td><td>72.0</td></tr>
-<tr><td>S3781</td><td>資材部</td><td>1975-06-11</td><td>仕入在庫管理</td><td>70.0</td></tr>
-<tr><td>S3781</td><td>経理部</td><td>1984-07-01</td><td>資金計画</td><td>81.0</td></tr>
-<tr><td>S3781</td><td>企画部</td><td>1993-07-01</td><td>会社組織,分掌</td><td>95.0</td></tr>
-<tr><td>08665</td><td>秘書室</td><td>1999-04-01</td><td>受付</td><td>70.0</td></tr>
-</table>
-</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">SELECT 社員、社員コード、社員名, AVG(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 勤務成績</li><li onclick="checkAnswer(this, false)">SELECT 社員、社員コード、社員名, MAX(勤務成績)/COUNT(*) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 社員・社員コード、社員・社員名</li><li onclick="checkAnswer(this, false)">SELECT 社員、社員コード、社員名, AVG(勤務成績)/COUNT(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員、社員コード = 人事異動、社員コード GROUP BY 社員、社員コード 社員、社員名</li><li onclick="checkAnswer(this, true)">SELECT 社員、社員コード、社員名, AVG(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 社員・社員コード、社員、社員名</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_11')">解答と解説を確認する</button>
-                <div id="test_ans_11" class="answer-area">
-                    <div class="answer-label">正解: SELECT 社員、社員コード、社員名, AVG(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 社員・社員コード、社員、社員名</div>
-                    <div class="explanation">平均を求めるにはAVG(勤務成績)を使い、社員ごとに集計するため社員コード・社員名ごとにGROUP BYする必要があります。（※元の選択肢の「、」「・」の表記ゆれは原文に忠実なものです）</div>
-                </div>
-            </div>
-    
-            <div class="question-card fixed">
-                <div class="question-type">Q12 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係モデルにおいて、情報無損失分解ができ、かつ、関数従属性保存が成り立つ変換が必ず存在するものはどれか。ここで、情報無損失分解とは自然結合によって元の関係が必ず得られる分解をいう。【令和5年秋期・問6】</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">非正規形から第1正規形への変換</li><li onclick="checkAnswer(this, false)">ボイスコッド正規形から第4正規形への変換</li><li onclick="checkAnswer(this, false)">第3正規形からボイスコッド正規形への変換</li><li onclick="checkAnswer(this, true)">第2正規形から第3正規形への変換</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_12')">解答と解説を確認する</button>
-                <div id="test_ans_12" class="answer-area">
-                    <div class="answer-label">正解: 第2正規形から第3正規形への変換</div>
-                    <div class="explanation">第3正規形への分解は、情報無損失かつ関数従属性保存となるように構成できます。BCNFへの分解は関数従属性保存が常に成り立つとは限りません。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q13 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_13')">解答と解説を確認する</button>
-                <div id="test_ans_13" class="answer-area">
-                    <div class="answer-label">正解: BCNFを満たし、自明でない多値従属性が存在しない状態</div>
+                    <div class="answer-label">正解: ウ</div>
                     <div class="explanation">第4正規形(4NF)は、「BCNFを満たし、自明でない多値従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
-                <div class="question-type">Q14 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-type">Q2 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「HNSW」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, false)">ア 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">イ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">ウ 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">エ BCNFを満たし、自明でない多値従属性が存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_2')">解答と解説を確認する</button>
+                <div id="test_ans_2" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">HNSWは、「近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q3 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_3')">解答と解説を確認する</button>
+                <div id="test_ans_3" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q4 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">イ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ウ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">エ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_4')">解答と解説を確認する</button>
+                <div id="test_ans_4" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">内部スキーマは、「データが物理的にどのように記憶装置に格納されるかを定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q5 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係モデルの候補キーの説明のうち、適切なものはどれか。【平成28年春期・問7】</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 一つの関係に候補キーが複数あってはならない。</li><li onclick="checkAnswer(this, false)">イ 候補キーは主キーの中から選ぶ。</li><li onclick="checkAnswer(this, true)">ウ 候補キーの値はタプルごとに異なる。</li><li onclick="checkAnswer(this, false)">エ 関係Rの候補キーは関係Rの属性の中から選ばない。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_5')">解答と解説を確認する</button>
+                <div id="test_ans_5" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">候補キーは一意性（各タプルを一意に識別できる）と極小性を満たす属性集合です。値が同じタプルが存在すると一意に識別できません。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q6 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_6')">解答と解説を確認する</button>
+                <div id="test_ans_6" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q7 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_7')">解答と解説を確認する</button>
+                <div id="test_ans_7" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q8 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「HNSW」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">イ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">ウ 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">エ BCNFを満たし、自明でない多値従属性が存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_8')">解答と解説を確認する</button>
+                <div id="test_ans_8" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">HNSWは、「近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q9 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「射影」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">イ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">エ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_9')">解答と解説を確認する</button>
+                <div id="test_ans_9" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">射影は、「関係から特定の属性（列）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q10 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「結合従属性」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, true)">エ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_10')">解答と解説を確認する</button>
+                <div id="test_ans_10" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">結合従属性は、「ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q11 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_11')">解答と解説を確認する</button>
+                <div id="test_ans_11" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q12 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">イ 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">ウ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_12')">解答と解説を確認する</button>
+                <div id="test_ans_12" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q13 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_13')">解答と解説を確認する</button>
+                <div id="test_ans_13" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q14 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係演算において、商演算と同等な結果が得られる演算の組合せはどれか。【令和7年秋期・問10】</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 直積演算と差演算と選択演算</li><li onclick="checkAnswer(this, false)">イ 直積演算と選択演算と和演算</li><li onclick="checkAnswer(this, true)">ウ 直積演算と射影演算と差演算</li><li onclick="checkAnswer(this, false)">エ 直積演算と射影演算と和演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_14')">解答と解説を確認する</button>
                 <div id="test_ans_14" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">商演算は直積（すべての組み合わせを作る）、差（不足分を引く）、射影（対象属性を取り出す）の組み合わせで表現できます。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q15 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, true)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_15')">解答と解説を確認する</button>
                 <div id="test_ans_15" class="answer-area">
-                    <div class="answer-label">正解: トランザクション中の変更を確定し、データベースに永続化する操作</div>
-                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q16 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> ビューのSELECT 権限に関する記述のうち、適切なものはどれか。【平成22年春期・問11】</div>
+                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, true)">ウ 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">エ データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_16')">解答と解説を確認する</button>
                 <div id="test_ans_16" class="answer-area">
-                    <div class="answer-label">正解: 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</div>
-                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q17 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+    <li onclick="checkAnswer(this, false)">ア BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">エ 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_17')">解答と解説を確認する</button>
                 <div id="test_ans_17" class="answer-area">
-                    <div class="answer-label">正解: 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</div>
-                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q18 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> トランザクションPが資源Xの値を4から5に更新した後にトランザクションQが開始し、Pがコミットする前にQが資源Xを参照しようとした。Qの挙動のa, bに入れる字句の組合せはどれか。ただし、隔離性水準は READ COMMITTEDとする。【令和6年秋期・問14】<br>同時実行制御が単版2相ロッキングプロトコルの場合Qは【a】。<br>多版同時実行制御 (MVCC) の場合Qは【b】。</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">a: Pがコミット完了するまで待機した後、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値4を得る</li><li onclick="checkAnswer(this, false)">a: Pがコミット完了するまで待機した後、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値5を得る</li><li onclick="checkAnswer(this, false)">a: Pのコミット完了を待機することなく、Xの値4を得る / b: Pのコミット完了を待機することなく、Xの値5を得る</li><li onclick="checkAnswer(this, false)">a: Pのコミット完了を待機することなく、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値4を得る</li>
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_18')">解答と解説を確認する</button>
                 <div id="test_ans_18" class="answer-area">
-                    <div class="answer-label">正解: a: Pがコミット完了するまで待機した後、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値4を得る</div>
-                    <div class="explanation">単版2相ロックではPの完了を待ってから最新値5を得ます。MVCCでは未コミットの更新後は見えないため、待たずにコミット済みの古い版である4を得ます。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q19 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「多値従属性」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, true)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_19')">解答と解説を確認する</button>
-                <div id="test_ans_19" class="answer-area">
-                    <div class="answer-label">正解: ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</div>
-                    <div class="explanation">多値従属性は、「ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q20 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_20')">解答と解説を確認する</button>
-                <div id="test_ans_20" class="answer-area">
-                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
-                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q21 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_21')">解答と解説を確認する</button>
-                <div id="test_ans_21" class="answer-area">
-                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="answer-label">正解: ア</div>
                     <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card ">
-                <div class="question-type">Q22 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ファントム」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_22')">解答と解説を確認する</button>
-                <div id="test_ans_22" class="answer-area">
-                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
-                    <div class="explanation">ファントムは、「同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q23 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_23')">解答と解説を確認する</button>
-                <div id="test_ans_23" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
             <div class="question-card fixed">
-                <div class="question-type">Q24 : テストモード (4択)</div>
+                <div class="question-type">Q19 : テストモード (4択)</div>
                 <div class="question-text"><span class='highlight'>【★第14回確定】</span>"社員"表に対して、SQL文を実行して得られる結果はどれか。ここで、実線の下線は主キーを表し、表中のNULL は値が存在しないことを表す。【令和4年秋期・問8】<br>
 <br><b>社員</b>
-<table class="db-table">
+<table class="db-table" style="max-width:300px;">
 <tr><th><u>社員コード</u></th><th>上司</th><th>社員名</th></tr>
 <tr><td>S001</td><td>NULL</td><td>A</td></tr>
 <tr><td>S002</td><td>S001</td><td>B</td></tr>
@@ -672,12 +634,77 @@ SELECT 社員コード FROM 社員 X WHERE NOT EXISTS
 (SELECT * FROM 社員 Y WHERE X. 社員コード = Y. 上司)
 </div></div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">誰かの上司になっている社員コード</li><li onclick="checkAnswer(this, true)">誰の上司にもなっていない社員コード</li><li onclick="checkAnswer(this, false)">最上位の上司の社員コード</li><li onclick="checkAnswer(this, false)">上司がNULLである社員コード</li>
+    <li onclick="checkAnswer(this, false)">ア 誰かの上司になっている社員コード</li><li onclick="checkAnswer(this, true)">イ 誰の上司にもなっていない社員コード</li><li onclick="checkAnswer(this, false)">ウ 最上位の上司の社員コード</li><li onclick="checkAnswer(this, false)">エ 上司がNULLである社員コード</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_19')">解答と解説を確認する</button>
+                <div id="test_ans_19" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">内側の副問合せは「Xの社員コードを上司としてもつ社員がいるか」を確認しています。NOT EXISTSにより、それに該当しない（誰の上司にもなっていない）社員が抽出されます。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q20 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「外部スキーマ」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, true)">エ ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_20')">解答と解説を確認する</button>
+                <div id="test_ans_20" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">外部スキーマは、「ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q21 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>k次のB木構造において、ルートノードは i 個 (1≦i≦2k) のレコードをもち、ルート以外のノードは j個 (k≦j≦2k) のレコードをもつものとする。ルートノードを1段目とした場合,B木は1段目からn段目までに最大何レコードを格納することができるか。ここで、k, nは自然数とし、 n≧2 とする。【平成28年春期・問2】</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 2(k+1)^{n-1} - 1</li><li onclick="checkAnswer(this, false)">イ (2k+1)^{n-1} - 1</li><li onclick="checkAnswer(this, true)">ウ (2k+1)^n - 1</li><li onclick="checkAnswer(this, false)">エ 2(k+1)^n - 1</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_21')">解答と解説を確認する</button>
+                <div id="test_ans_21" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">各段の最大レコード数の合計は等比数列の和となり、計算すると (2k+1)^n - 1 になります。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q22 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_22')">解答と解説を確認する</button>
+                <div id="test_ans_22" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q23 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">イ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">ウ 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">エ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_23')">解答と解説を確認する</button>
+                <div id="test_ans_23" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q24 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_24')">解答と解説を確認する</button>
                 <div id="test_ans_24" class="answer-area">
-                    <div class="answer-label">正解: 誰の上司にもなっていない社員コード</div>
-                    <div class="explanation">内側の副問合せは「Xの社員コードを上司としてもつ社員がいるか」を確認しています。NOT EXISTSにより、それに該当しない（誰の上司にもなっていない）社員が抽出されます。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
@@ -685,233 +712,233 @@ SELECT 社員コード FROM 社員 X WHERE NOT EXISTS
                 <div class="question-type">Q25 : テストモード (4択)</div>
                 <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_25')">解答と解説を確認する</button>
                 <div id="test_ans_25" class="answer-area">
-                    <div class="answer-label">正解: 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</div>
+                    <div class="answer-label">正解: ウ</div>
                     <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q26 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「多値従属性」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, true)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, true)">ウ 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">エ データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_26')">解答と解説を確認する</button>
                 <div id="test_ans_26" class="answer-area">
-                    <div class="answer-label">正解: ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</div>
-                    <div class="explanation">多値従属性は、「ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q27 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ROLLBACK」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, true)">ア トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">イ 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">ウ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_27')">解答と解説を確認する</button>
                 <div id="test_ans_27" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ROLLBACKは、「トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q28 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span>厳格な2相ロッキングプロトコルと表ロックを適用して、同時実行している他のトランザクションの処理結果に影響を与えないようにする。実現されるトランザクションの隔離性水準はどれか。【平成30年春期・問14】</div>
+                <div class="question-text">次の記述のうち、「第3正規形(3NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">READ UNCOMMITTED</li><li onclick="checkAnswer(this, false)">REPEATABLE READ</li><li onclick="checkAnswer(this, false)">READ COMMITTED</li><li onclick="checkAnswer(this, true)">SERIALIZABLE</li>
+    <li onclick="checkAnswer(this, true)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">イ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">ウ 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">エ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_28')">解答と解説を確認する</button>
                 <div id="test_ans_28" class="answer-area">
-                    <div class="answer-label">正解: SERIALIZABLE</div>
-                    <div class="explanation">厳格な2相ロッキングと表ロックにより、他のトランザクションの影響を受けない直列実行と同等の SERIALIZABLE が実現されます。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">第3正規形(3NF)は、「2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q29 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_29')">解答と解説を確認する</button>
                 <div id="test_ans_29" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q30 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li>
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_30')">解答と解説を確認する</button>
                 <div id="test_ans_30" class="answer-area">
-                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
-                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q31 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_31')">解答と解説を確認する</button>
-                <div id="test_ans_31" class="answer-area">
-                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
+                    <div class="answer-label">正解: ア</div>
                     <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
-                <div class="question-type">Q32 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「クラスタ化索引」に関する適切なものはどれか。</div>
+                <div class="question-type">Q31 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_31')">解答と解説を確認する</button>
+                <div id="test_ans_31" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q32 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「ダーティリード」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, true)">イ 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">ウ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">エ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_32')">解答と解説を確認する</button>
                 <div id="test_ans_32" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</div>
-                    <div class="explanation">クラスタ化索引は、「索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">ダーティリードは、「未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q33 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「射影」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「概念スキーマ」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+    <li onclick="checkAnswer(this, true)">ア データベース全体の論理的な構造を定義するもの</li><li onclick="checkAnswer(this, false)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">エ トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_33')">解答と解説を確認する</button>
                 <div id="test_ans_33" class="answer-area">
-                    <div class="answer-label">正解: 関係から特定の属性（列）のみを抽出する演算</div>
-                    <div class="explanation">射影は、「関係から特定の属性（列）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">概念スキーマは、「データベース全体の論理的な構造を定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q34 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「排他ロック」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">イ トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, true)">ウ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">エ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_34')">解答と解説を確認する</button>
+                <div id="test_ans_34" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">排他ロックは、「データを更新する際に取得するロック。他のいかなるロックとも競合する」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card fixed">
-                <div class="question-type">Q34 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>ANSI/SPARC3層スキーマに関する記述として、適切でないものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</li><li onclick="checkAnswer(this, false)">外部スキーマは、概念スキーマが変化しても応用プログラムができるだけ影響を受けないようにするための考え方である。</li><li onclick="checkAnswer(this, false)">ANSI/SPARC3層スキーマの意義は、物理的データ独立性及び論理的データ独立性を確保することである。</li><li onclick="checkAnswer(this, false)">内部スキーマは、概念スキーマをコンピュータ上に実装するための記述である。</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_34')">解答と解説を確認する</button>
-                <div id="test_ans_34" class="answer-area">
-                    <div class="answer-label">正解: 関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</div>
-                    <div class="explanation">ビューやサブスキーマは、利用者ごとの見え方を表す「外部スキーマ」に相当します。概念スキーマはデータベース全体の論理的な構造を指します。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
                 <div class="question-type">Q35 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> トランザクションPが資源Xの値を4から5に更新した後にトランザクションQが開始し、Pがコミットする前にQが資源Xを参照しようとした。Qの挙動のa, bに入れる字句の組合せはどれか。ただし、隔離性水準は READ COMMITTEDとする。【令和6年秋期・問14】<br>同時実行制御が単版2相ロッキングプロトコルの場合Qは【a】。<br>多版同時実行制御 (MVCC) の場合Qは【b】。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, true)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li>
+    <li onclick="checkAnswer(this, true)">ア a: Pがコミット完了するまで待機した後、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値4を得る</li><li onclick="checkAnswer(this, false)">イ a: Pがコミット完了するまで待機した後、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値5を得る</li><li onclick="checkAnswer(this, false)">ウ a: Pのコミット完了を待機することなく、Xの値4を得る / b: Pのコミット完了を待機することなく、Xの値5を得る</li><li onclick="checkAnswer(this, false)">エ a: Pのコミット完了を待機することなく、Xの値5を得る / b: Pのコミット完了を待機することなく、Xの値4を得る</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_35')">解答と解説を確認する</button>
                 <div id="test_ans_35" class="answer-area">
-                    <div class="answer-label">正解: トランザクション中の変更を確定し、データベースに永続化する操作</div>
-                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">単版2相ロックではPの完了を待ってから最新値5を得ます。MVCCでは未コミットの更新後は見えないため、待たずにコミット済みの古い版である4を得ます。</div>
                 </div>
             </div>
     
-            <div class="question-card ">
+            <div class="question-card fixed">
                 <div class="question-type">Q36 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係モデルにおいて、情報無損失分解ができ、かつ、関数従属性保存が成り立つ変換が必ず存在するものはどれか。ここで、情報無損失分解とは自然結合によって元の関係が必ず得られる分解をいう。【令和5年秋期・問6】</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, false)">ア 非正規形から第1正規形への変換</li><li onclick="checkAnswer(this, false)">イ ボイスコッド正規形から第4正規形への変換</li><li onclick="checkAnswer(this, false)">ウ 第3正規形からボイスコッド正規形への変換</li><li onclick="checkAnswer(this, true)">エ 第2正規形から第3正規形への変換</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_36')">解答と解説を確認する</button>
                 <div id="test_ans_36" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">第3正規形への分解は、情報無損失かつ関数従属性保存となるように構成できます。BCNFへの分解は関数従属性保存が常に成り立つとは限りません。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q37 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_37')">解答と解説を確認する</button>
                 <div id="test_ans_37" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第4正規形(4NF)は、「BCNFを満たし、自明でない多値従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q38 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「結合従属性」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_38')">解答と解説を確認する</button>
                 <div id="test_ans_38" class="answer-area">
-                    <div class="answer-label">正解: ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</div>
-                    <div class="explanation">結合従属性は、「ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第4正規形(4NF)は、「BCNFを満たし、自明でない多値従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q39 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「多値従属性」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, true)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_39')">解答と解説を確認する</button>
                 <div id="test_ans_39" class="answer-area">
-                    <div class="answer-label">正解: ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</div>
-                    <div class="explanation">多値従属性は、「ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q40 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+    <li onclick="checkAnswer(this, false)">ア 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">ウ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_40')">解答と解説を確認する</button>
                 <div id="test_ans_40" class="answer-area">
-                    <div class="answer-label">正解: データが物理的にどのように記憶装置に格納されるかを定義するもの</div>
-                    <div class="explanation">内部スキーマは、「データが物理的にどのように記憶装置に格納されるかを定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q41 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_41')">解答と解説を確認する</button>
                 <div id="test_ans_41" class="answer-area">
-                    <div class="answer-label">正解: データが物理的にどのように記憶装置に格納されるかを定義するもの</div>
-                    <div class="explanation">内部スキーマは、「データが物理的にどのように記憶装置に格納されるかを定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q42 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+    <li onclick="checkAnswer(this, true)">ア 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">イ 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">ウ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_42')">解答と解説を確認する</button>
                 <div id="test_ans_42" class="answer-area">
-                    <div class="answer-label">正解: 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</div>
-                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
@@ -919,199 +946,406 @@ SELECT 社員コード FROM 社員 X WHERE NOT EXISTS
                 <div class="question-type">Q43 : テストモード (4択)</div>
                 <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li>
+    <li onclick="checkAnswer(this, false)">ア 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">ウ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_43')">解答と解説を確認する</button>
                 <div id="test_ans_43" class="answer-area">
-                    <div class="answer-label">正解: 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</div>
+                    <div class="answer-label">正解: ウ</div>
                     <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card ">
+            <div class="question-card fixed">
                 <div class="question-type">Q44 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「RAG (Retrieval-Augmented Generation)」に関する適切なものはどれか。</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span>厳格な2相ロッキングプロトコルと表ロックを適用して、同時実行している他のトランザクションの処理結果に影響を与えないようにする。実現されるトランザクションの隔離性水準はどれか。【平成30年春期・問14】</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li>
+    <li onclick="checkAnswer(this, false)">ア READ UNCOMMITTED</li><li onclick="checkAnswer(this, false)">イ REPEATABLE READ</li><li onclick="checkAnswer(this, false)">ウ READ COMMITTED</li><li onclick="checkAnswer(this, true)">エ SERIALIZABLE</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_44')">解答と解説を確認する</button>
                 <div id="test_ans_44" class="answer-area">
-                    <div class="answer-label">正解: 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</div>
-                    <div class="explanation">RAG (Retrieval-Augmented Generation)は、「質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">厳格な2相ロッキングと表ロックにより、他のトランザクションの影響を受けない直列実行と同等の SERIALIZABLE が実現されます。</div>
                 </div>
             </div>
     
             <div class="question-card fixed">
                 <div class="question-type">Q45 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>k次のB木構造において、ルートノードは i 個 (1≦i≦2k) のレコードをもち、ルート以外のノードは j個 (k≦j≦2k) のレコードをもつものとする。ルートノードを1段目とした場合,B木は1段目からn段目までに最大何レコードを格納することができるか。ここで、k, nは自然数とし、 n≧2 とする。【平成28年春期・問2】</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係代数における直積に関する記述として、適切なものはどれか。【令和2年秋期・問9】</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">2(k+1)^{n-1} - 1</li><li onclick="checkAnswer(this, false)">(2k+1)^{n-1} - 1</li><li onclick="checkAnswer(this, true)">(2k+1)^n - 1</li><li onclick="checkAnswer(this, false)">2(k+1)^n - 1</li>
+    <li onclick="checkAnswer(this, false)">ア ある属性の値に付加した条件を満たす全てのタプルの集合である。</li><li onclick="checkAnswer(this, false)">イ ある一つの関係の指定された属性だけを残して、ほかの属性を取り去って得られる属性の集合である。</li><li onclick="checkAnswer(this, true)">ウ 二つの関係における、全てのタプルの組合せの集合である。</li><li onclick="checkAnswer(this, false)">エ 二つの関係における、あらかじめ指定されている二つの属性の2項関係を満たす全てのタプルの組合せの集合である。</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_45')">解答と解説を確認する</button>
                 <div id="test_ans_45" class="answer-area">
-                    <div class="answer-label">正解: (2k+1)^n - 1</div>
-                    <div class="explanation">各段の最大レコード数の合計は等比数列の和となり、計算すると (2k+1)^n - 1 になります。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">直積は、条件を付けずに2つの関係の行をすべて組み合わせる演算です。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q46 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第3正規形(3NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「選択」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+    <li onclick="checkAnswer(this, true)">ア 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_46')">解答と解説を確認する</button>
                 <div id="test_ans_46" class="answer-area">
-                    <div class="answer-label">正解: 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</div>
-                    <div class="explanation">第3正規形(3NF)は、「2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card fixed">
-                <div class="question-type">Q47 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係演算において、商演算と同等な結果が得られる演算の組合せはどれか。【令和7年秋期・問10】</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">直積演算と差演算と選択演算</li><li onclick="checkAnswer(this, false)">直積演算と選択演算と和演算</li><li onclick="checkAnswer(this, true)">直積演算と射影演算と差演算</li><li onclick="checkAnswer(this, false)">直積演算と射影演算と和演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_47')">解答と解説を確認する</button>
-                <div id="test_ans_47" class="answer-area">
-                    <div class="answer-label">正解: 直積演算と射影演算と差演算</div>
-                    <div class="explanation">商演算は直積（すべての組み合わせを作る）、差（不足分を引く）、射影（対象属性を取り出す）の組み合わせで表現できます。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q48 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, true)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_48')">解答と解説を確認する</button>
-                <div id="test_ans_48" class="answer-area">
-                    <div class="answer-label">正解: トランザクション中の変更を確定し、データベースに永続化する操作</div>
-                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q49 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_49')">解答と解説を確認する</button>
-                <div id="test_ans_49" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q50 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_50')">解答と解説を確認する</button>
-                <div id="test_ans_50" class="answer-area">
-                    <div class="answer-label">正解: 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</div>
-                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q51 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_51')">解答と解説を確認する</button>
-                <div id="test_ans_51" class="answer-area">
-                    <div class="answer-label">正解: 関係から特定の条件を満たすタプル（行）のみを抽出する演算</div>
+                    <div class="answer-label">正解: ア</div>
                     <div class="explanation">選択は、「関係から特定の条件を満たすタプル（行）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
-                <div class="question-type">Q52 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第1正規形(1NF)」に関する適切なものはどれか。</div>
+                <div class="question-type">Q47 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「RAG (Retrieval-Augmented Generation)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+    <li onclick="checkAnswer(this, false)">ア 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, true)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">エ データベース全体の論理的な構造を定義するもの</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_47')">解答と解説を確認する</button>
+                <div id="test_ans_47" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">RAG (Retrieval-Augmented Generation)は、「質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q48 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, true)">イ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">ウ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">エ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_48')">解答と解説を確認する</button>
+                <div id="test_ans_48" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q49 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> DBMSをシステム障害発生後に再立上げするとき、ロールフォワードすべきトランザクションとロールバックすべきトランザクションの組合せとして、適切なものはどれか。ここで、トランザクションの中で実行される処理内容は次のとおりとする。【令和7年秋期・問12】<br>
+<table class="db-table" style="max-width:500px;">
+<tr><th>トランザクション</th><th>データベースに対するRead回数とWrite回数</th></tr>
+<tr><td>T1, T2</td><td>Read 10, Write 20</td></tr>
+<tr><td>T3, T4</td><td>Read 100</td></tr>
+<tr><td>T5, T6</td><td>Read 20, Write 10</td></tr>
+</table>
+<div class="timeline-box">
+           チェックポイント             障害発生
+                  |                      |
+T1 ───────●         |                      |
+T2 ───────────────|──────────────●       |
+T3                |     ─────────────────|
+T4 ───────────────|────────────────────────|
+T5                |        ──────────●     |
+T6                |              ────────|
+                  |                      |
+                 時間 ─────────────────────────>
+● コミットされたトランザクションを示す。
+─ コミットされていないトランザクションを示す。
+</div></div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア ロールフォワード: T2, T5 / ロールバック: T6</li><li onclick="checkAnswer(this, false)">イ ロールフォワード: T1, T2, T5 / ロールバック: T6</li><li onclick="checkAnswer(this, false)">ウ ロールフォワード: T1, T2, T5 / ロールバック: T3, T6</li><li onclick="checkAnswer(this, false)">エ ロールフォワード: T2, T5 / ロールバック: T3, T6</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_49')">解答と解説を確認する</button>
+                <div id="test_ans_49" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">CP前に完了したT1は対象外。障害前に完了し更新のあるT2, T5はロールフォワード。障害時に未完了で更新のあるT6はロールバック。T3等の読込みのみのトランザクションはDBを書き換えないためロールバック不要です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q50 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「外部スキーマ」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, true)">エ ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_50')">解答と解説を確認する</button>
+                <div id="test_ans_50" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">外部スキーマは、「ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q51 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, true)">ウ 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">エ データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_51')">解答と解説を確認する</button>
+                <div id="test_ans_51" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q52 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_52')">解答と解説を確認する</button>
                 <div id="test_ans_52" class="answer-area">
-                    <div class="answer-label">正解: 繰り返し項目、複数値属性、入れ子構造を持たない状態</div>
-                    <div class="explanation">第1正規形(1NF)は、「繰り返し項目、複数値属性、入れ子構造を持たない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第4正規形(4NF)は、「BCNFを満たし、自明でない多値従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q53 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「結合従属性」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「射影」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">イ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">エ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_53')">解答と解説を確認する</button>
                 <div id="test_ans_53" class="answer-area">
-                    <div class="answer-label">正解: ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</div>
-                    <div class="explanation">結合従属性は、「ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">射影は、「関係から特定の属性（列）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q54 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ダーティリード」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li>
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ トランザクション中の変更を確定し、データベースに永続化する操作</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_54')">解答と解説を確認する</button>
                 <div id="test_ans_54" class="answer-area">
-                    <div class="answer-label">正解: 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</div>
-                    <div class="explanation">ダーティリードは、「未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q55 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_55')">解答と解説を確認する</button>
                 <div id="test_ans_55" class="answer-area">
-                    <div class="answer-label">正解: 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</div>
-                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q56 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
+    <li onclick="checkAnswer(this, false)">ア BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">エ 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_56')">解答と解説を確認する</button>
                 <div id="test_ans_56" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q57 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_57')">解答と解説を確認する</button>
                 <div id="test_ans_57" class="answer-area">
-                    <div class="answer-label">正解: データが物理的にどのように記憶装置に格納されるかを定義するもの</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q58 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「第4正規形(4NF)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_58')">解答と解説を確認する</button>
+                <div id="test_ans_58" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第4正規形(4NF)は、「BCNFを満たし、自明でない多値従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q59 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_59')">解答と解説を確認する</button>
+                <div id="test_ans_59" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q60 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「選択」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_60')">解答と解説を確認する</button>
+                <div id="test_ans_60" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">選択は、「関係から特定の条件を満たすタプル（行）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q61 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span>更新前情報と更新後情報をログとして利用する DBMS において、ログを先に書き出すWAL(Write Ahead Log) プロトコルに従うとして、処理①~⑥を正しい順番に並べたものはどれか。【平成24年春期・問17】<br>① begin transaction レコードを書き出す。<br>② データベースを更新する。<br>③ ログに更新前レコードを書き出す。<br>④ ログに更新後レコードを書き出す。<br>⑤ commit レコードを書き出す。<br>⑥ end transaction レコードを書き出す。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア ①→②→③→④→⑤→⑥</li><li onclick="checkAnswer(this, true)">イ ①→③→④→②→⑤→⑥</li><li onclick="checkAnswer(this, false)">ウ ①→③→②→⑤→④→⑥</li><li onclick="checkAnswer(this, false)">エ ①→③→④→②→⑥→⑤</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_61')">解答と解説を確認する</button>
+                <div id="test_ans_61" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">WALプロトコルでは、データベース本体を書き換える前に、必ず更新前と更新後のログを安定記憶に書き出します。（イが正解）</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q62 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">イ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ウ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">エ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_62')">解答と解説を確認する</button>
+                <div id="test_ans_62" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
                     <div class="explanation">内部スキーマは、「データが物理的にどのように記憶装置に格納されるかを定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card fixed">
-                <div class="question-type">Q58 : テストモード (4択)</div>
+                <div class="question-type">Q63 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>"社員"表と"人事異動"表から社員ごとの勤務成績の平均を求める適切な SQL 文はどれか。ここで、求める項目は、社員コード、社員名,勤務成績(平均)の3項目とする。【平成21年春期・問9】<br>
+<br><b>社員</b>
+<table class="db-table" style="max-width:500px;">
+<tr><th>社員コード</th><th>社員名</th><th>性別</th><th>生年月日</th><th>入社年月日</th></tr>
+<tr><td>01553</td><td>太田 由美</td><td>女</td><td>1970-03-10</td><td>1990-04-01</td></tr>
+<tr><td>S3781</td><td>佐藤義男</td><td>男</td><td>1943-11-20</td><td>1975-06-11</td></tr>
+<tr><td>08665</td><td>太田 由美</td><td>女</td><td>1978-10-13</td><td>1999-04-01</td></tr>
+</table>
+<b>人事異動</b>
+<table class="db-table" style="max-width:500px;">
+<tr><th>社員コード</th><th>配属部門</th><th>配属年月日</th><th>担当勤務内容</th><th>勤務成績</th></tr>
+<tr><td>01553</td><td>総務部</td><td>1990-04-01</td><td>広報(社内報)</td><td>69.0</td></tr>
+<tr><td>01553</td><td>営業部</td><td>1998-07-01</td><td>顧客管理</td><td>72.0</td></tr>
+<tr><td>S3781</td><td>資材部</td><td>1975-06-11</td><td>仕入在庫管理</td><td>70.0</td></tr>
+<tr><td>S3781</td><td>経理部</td><td>1984-07-01</td><td>資金計画</td><td>81.0</td></tr>
+<tr><td>S3781</td><td>企画部</td><td>1993-07-01</td><td>会社組織,分掌</td><td>95.0</td></tr>
+<tr><td>08665</td><td>秘書室</td><td>1999-04-01</td><td>受付</td><td>70.0</td></tr>
+</table>
+</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア SELECT 社員、社員コード、社員名, AVG(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 勤務成績</li><li onclick="checkAnswer(this, false)">イ SELECT 社員、社員コード、社員名, MAX(勤務成績)/COUNT(*) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 社員・社員コード、社員・社員名</li><li onclick="checkAnswer(this, false)">ウ SELECT 社員、社員コード、社員名, AVG(勤務成績)/COUNT(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員、社員コード = 人事異動、社員コード GROUP BY 社員、社員コード 社員、社員名</li><li onclick="checkAnswer(this, true)">エ SELECT 社員、社員コード、社員名, AVG(勤務成績) AS "勤務成績(平均)" FROM 社員,人事異動 WHERE 社員・社員コード = 人事異動、社員コード GROUP BY 社員・社員コード、社員、社員名</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_63')">解答と解説を確認する</button>
+                <div id="test_ans_63" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">平均を求めるにはAVG(勤務成績)を使い、社員ごとに集計するため社員コード・社員名ごとにGROUP BYする必要があります。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q64 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> ビューのSELECT 権限に関する記述のうち、適切なものはどれか。【平成22年春期・問11】</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 元の表に対する SELECT 権限にかかわらず、そのビューに対する SELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">イ ビューに対する SELECT 権限にかかわらず、元の表に対するSELECT 権限があれば、そのビューに対して問合せをすることができる。</li><li onclick="checkAnswer(this, false)">ウ ビューに対して問合せをするには、ビューに対する SELECT 権限又は元の表に対する SELECT 権限のいずれかがあればよい。</li><li onclick="checkAnswer(this, false)">エ ビューに対して問合せをするには、ビューに対する SELECT 権限だけではなく、元の表に対する SELECT 権限も必要である。</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_64')">解答と解説を確認する</button>
+                <div id="test_ans_64" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ビューは元表の一部だけを見せるための仕組みであり、元表の権限がなくてもビュー自体の権限があればアクセス可能です。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q65 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ トランザクション中の変更を確定し、データベースに永続化する操作</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_65')">解答と解説を確認する</button>
+                <div id="test_ans_65" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q66 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_66')">解答と解説を確認する</button>
+                <div id="test_ans_66" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q67 : テストモード (4択)</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>"従業員"表から、男女それぞれの最年長従業員を除く全ての従業員を取り出すSQL文とするために、aに入れる字句はどれか。ここで、"従業員"表の構造は次のとおりであり、実線の下線は主キーを表す。【令和6年秋期・問10】<br>従業員(<u>従業員番号</u>,従業員名,性別,生年月日)<br><div class="code-block">[SQL文]<br>SELECT 従業員番号,従業員名 FROM 従業員 AS S1 WHERE 生年月日 > (<br>  a  <br>)</div></div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア SELECT MIN(生年月日) FROM 従業員 AS S2 WHERE S1.生年月日 > S2. 生年月日 OR S1.性別 = S2.性別</li><li onclick="checkAnswer(this, true)">イ SELECT MIN(生年月日) FROM 従業員 AS S2 WHERE S1.性別 = S2.性別</li><li onclick="checkAnswer(this, false)">ウ SELECT MIN(生年月日) FROM 従業員 AS S2 GROUP BY S2.性別</li><li onclick="checkAnswer(this, false)">エ SELECT MIN(生年月日) FROM 従業員 GROUP BY S2.性別</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_67')">解答と解説を確認する</button>
+                <div id="test_ans_67" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">男女それぞれで最年長（生年月日が最小）を除外するため、外側のS1と同じ性別に絞る相関副問合せを使います。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q68 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">ウ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_68')">解答と解説を確認する</button>
+                <div id="test_ans_68" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q69 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「外部スキーマ」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, true)">エ ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_69')">解答と解説を確認する</button>
+                <div id="test_ans_69" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">外部スキーマは、「ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q70 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_70')">解答と解説を確認する</button>
+                <div id="test_ans_70" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card fixed">
+                <div class="question-type">Q71 : テストモード (4択)</div>
                 <div class="question-text"><span class='highlight'>【★第14回確定】</span>"社員"表と"プロジェクト"表に対して、次のSQL文を実行した結果はどれか。【平成24年春期・問11】<br>
 <div class="code-block">
 SELECT プロジェクト番号、社員番号 FROM プロジェクト WHERE 社員番号 IN
@@ -1137,578 +1371,389 @@ SELECT プロジェクト番号、社員番号 FROM プロジェクト WHERE 社
 </table>
 </div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">P001, 11111 と P001, 22222 の行のみ</li><li onclick="checkAnswer(this, false)">P002, 33333 と P002, 44444 の行のみ</li><li onclick="checkAnswer(this, false)">P003, 55555 の行のみ</li><li onclick="checkAnswer(this, false)">P001 から P003 までの全行</li>
+    <li onclick="checkAnswer(this, true)">ア P001, 11111 と P001, 22222 の行のみ</li><li onclick="checkAnswer(this, false)">イ P002, 33333 と P002, 44444 の行のみ</li><li onclick="checkAnswer(this, false)">ウ P003, 55555 の行のみ</li><li onclick="checkAnswer(this, false)">エ P001 から P003 までの全行</li>
                 </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_58')">解答と解説を確認する</button>
-                <div id="test_ans_58" class="answer-area">
-                    <div class="answer-label">正解: P001, 11111 と P001, 22222 の行のみ</div>
+                <button class="btn" onclick="toggleAnswer('test_ans_71')">解答と解説を確認する</button>
+                <div id="test_ans_71" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
                     <div class="explanation">副問合せで部門が2000以下の社員番号（11111, 22222）が抽出され、プロジェクト表からその社員番号を持つ行が選ばれます。</div>
                 </div>
             </div>
     
             <div class="question-card ">
-                <div class="question-type">Q59 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ROLLBACK」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, true)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">関係から特定の属性（列）のみを抽出する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_59')">解答と解説を確認する</button>
-                <div id="test_ans_59" class="answer-area">
-                    <div class="answer-label">正解: トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</div>
-                    <div class="explanation">ROLLBACKは、「トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q60 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ROLLBACK」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, true)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">関係から特定の属性（列）のみを抽出する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_60')">解答と解説を確認する</button>
-                <div id="test_ans_60" class="answer-area">
-                    <div class="answer-label">正解: トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</div>
-                    <div class="explanation">ROLLBACKは、「トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q61 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「射影」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_61')">解答と解説を確認する</button>
-                <div id="test_ans_61" class="answer-area">
-                    <div class="answer-label">正解: 関係から特定の属性（列）のみを抽出する演算</div>
-                    <div class="explanation">射影は、「関係から特定の属性（列）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q62 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「HNSW」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_62')">解答と解説を確認する</button>
-                <div id="test_ans_62" class="answer-area">
-                    <div class="answer-label">正解: 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</div>
-                    <div class="explanation">HNSWは、「近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q63 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, true)">コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_63')">解答と解説を確認する</button>
-                <div id="test_ans_63" class="answer-area">
-                    <div class="answer-label">正解: コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</div>
-                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q64 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ファントム」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_64')">解答と解説を確認する</button>
-                <div id="test_ans_64" class="answer-area">
-                    <div class="answer-label">正解: 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</div>
-                    <div class="explanation">ファントムは、「同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q65 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「多値従属性」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, true)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_65')">解答と解説を確認する</button>
-                <div id="test_ans_65" class="answer-area">
-                    <div class="answer-label">正解: ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</div>
-                    <div class="explanation">多値従属性は、「ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q66 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「外部スキーマ」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_66')">解答と解説を確認する</button>
-                <div id="test_ans_66" class="answer-area">
-                    <div class="answer-label">正解: ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</div>
-                    <div class="explanation">外部スキーマは、「ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q67 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_67')">解答と解説を確認する</button>
-                <div id="test_ans_67" class="answer-area">
-                    <div class="answer-label">正解: 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</div>
-                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q68 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データベース全体の論理的な構造を定義するもの</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, true)">データを読み込む際に取得するロック。他の共有ロックと競合しない</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_68')">解答と解説を確認する</button>
-                <div id="test_ans_68" class="answer-area">
-                    <div class="answer-label">正解: データを読み込む際に取得するロック。他の共有ロックと競合しない</div>
-                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q69 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_69')">解答と解説を確認する</button>
-                <div id="test_ans_69" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q70 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「RAG (Retrieval-Augmented Generation)」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_70')">解答と解説を確認する</button>
-                <div id="test_ans_70" class="answer-area">
-                    <div class="answer-label">正解: 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</div>
-                    <div class="explanation">RAG (Retrieval-Augmented Generation)は、「質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q71 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_71')">解答と解説を確認する</button>
-                <div id="test_ans_71" class="answer-area">
-                    <div class="answer-label">正解: 2つの関係のすべてのタプルの組み合わせを生成する演算</div>
-                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
                 <div class="question-type">Q72 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_72')">解答と解説を確認する</button>
                 <div id="test_ans_72" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q73 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_73')">解答と解説を確認する</button>
                 <div id="test_ans_73" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card ">
+            <div class="question-card fixed">
                 <div class="question-type">Q74 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「多値従属性」に関する適切なものはどれか。</div>
+                <div class="question-text"><span class='highlight'>【★第14回確定】</span>ANSI/SPARC3層スキーマに関する記述として、適切でないものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, true)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, true)">ア 関係データベースのビューやネットワークデータベースのサブスキーマは、概念スキーマに相当する。</li><li onclick="checkAnswer(this, false)">イ 外部スキーマは、概念スキーマが変化しても応用プログラムができるだけ影響を受けないようにするための考え方である。</li><li onclick="checkAnswer(this, false)">ウ ANSI/SPARC3層スキーマの意義は、物理的データ独立性及び論理的データ独立性を確保することである。</li><li onclick="checkAnswer(this, false)">エ 内部スキーマは、概念スキーマをコンピュータ上に実装するための記述である。</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_74')">解答と解説を確認する</button>
                 <div id="test_ans_74" class="answer-area">
-                    <div class="answer-label">正解: ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</div>
-                    <div class="explanation">多値従属性は、「ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ビューやサブスキーマは、利用者ごとの見え方を表す「外部スキーマ」に相当します。概念スキーマはデータベース全体の論理的な構造を指します。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q75 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第1正規形(1NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ROLLBACK」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+    <li onclick="checkAnswer(this, true)">ア トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">イ 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">ウ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_75')">解答と解説を確認する</button>
                 <div id="test_ans_75" class="answer-area">
-                    <div class="answer-label">正解: 繰り返し項目、複数値属性、入れ子構造を持たない状態</div>
-                    <div class="explanation">第1正規形(1NF)は、「繰り返し項目、複数値属性、入れ子構造を持たない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ROLLBACKは、「トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q76 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第1正規形(1NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_76')">解答と解説を確認する</button>
                 <div id="test_ans_76" class="answer-area">
-                    <div class="answer-label">正解: 繰り返し項目、複数値属性、入れ子構造を持たない状態</div>
-                    <div class="explanation">第1正規形(1NF)は、「繰り返し項目、複数値属性、入れ子構造を持たない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q77 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第3正規形(3NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_77')">解答と解説を確認する</button>
                 <div id="test_ans_77" class="answer-area">
-                    <div class="answer-label">正解: 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</div>
-                    <div class="explanation">第3正規形(3NF)は、「2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q78 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第1正規形(1NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_78')">解答と解説を確認する</button>
                 <div id="test_ans_78" class="answer-area">
-                    <div class="answer-label">正解: 繰り返し項目、複数値属性、入れ子構造を持たない状態</div>
-                    <div class="explanation">第1正規形(1NF)は、「繰り返し項目、複数値属性、入れ子構造を持たない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q79 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「HNSW」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li>
+    <li onclick="checkAnswer(this, false)">ア 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">イ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">ウ 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">エ BCNFを満たし、自明でない多値従属性が存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_79')">解答と解説を確認する</button>
                 <div id="test_ans_79" class="answer-area">
-                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
-                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">HNSWは、「近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q80 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「ダーティリード」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「クラスタ化索引」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li>
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, true)">ウ 索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, false)">エ 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_80')">解答と解説を確認する</button>
                 <div id="test_ans_80" class="answer-area">
-                    <div class="answer-label">正解: 未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</div>
-                    <div class="explanation">ダーティリードは、「未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">クラスタ化索引は、「索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q81 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「概念スキーマ」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「射影」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, true)">データベース全体の論理的な構造を定義するもの</li><li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li>
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">イ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, true)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">エ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_81')">解答と解説を確認する</button>
                 <div id="test_ans_81" class="answer-area">
-                    <div class="answer-label">正解: データベース全体の論理的な構造を定義するもの</div>
-                    <div class="explanation">概念スキーマは、「データベース全体の論理的な構造を定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">射影は、「関係から特定の属性（列）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q82 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, true)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_82')">解答と解説を確認する</button>
                 <div id="test_ans_82" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q83 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ロールフォワード」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
+    <li onclick="checkAnswer(this, true)">ア コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li><li onclick="checkAnswer(this, false)">イ データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">ウ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">エ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_83')">解答と解説を確認する</button>
                 <div id="test_ans_83" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ロールフォワードは、「コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q84 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+    <li onclick="checkAnswer(this, false)">ア 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">ウ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_84')">解答と解説を確認する</button>
                 <div id="test_ans_84" class="answer-area">
-                    <div class="answer-label">正解: 関係から特定の条件を満たすタプル（行）のみを抽出する演算</div>
-                    <div class="explanation">選択は、「関係から特定の条件を満たすタプル（行）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q85 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「HNSW」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li>
+    <li onclick="checkAnswer(this, false)">ア 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, true)">イ 近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法</li><li onclick="checkAnswer(this, false)">ウ 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">エ BCNFを満たし、自明でない多値従属性が存在しない状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_85')">解答と解説を確認する</button>
                 <div id="test_ans_85" class="answer-area">
-                    <div class="answer-label">正解: 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</div>
-                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">HNSWは、「近いベクトル同士を辺でつなぎ、階層的なグラフを作ることで近似最近傍探索を行う手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q86 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, true)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_86')">解答と解説を確認する</button>
                 <div id="test_ans_86" class="answer-area">
-                    <div class="answer-label">正解: 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</div>
-                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q87 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>"従業員"表から、男女それぞれの最年長従業員を除く全ての従業員を取り出すSQL文とするために、aに入れる字句はどれか。ここで、"従業員"表の構造は次のとおりであり、実線の下線は主キーを表す。【令和6年秋期・問10】<br>従業員(<u>従業員番号</u>,従業員名,性別,生年月日)<br><div class="code-block">[SQL文]<br>SELECT 従業員番号,従業員名 FROM 従業員 AS S1 WHERE 生年月日 > (<br>  a  <br>)</div></div>
+                <div class="question-text">次の記述のうち、「COMMIT」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">SELECT MIN(生年月日) FROM 従業員 AS S2 WHERE S1.生年月日 > S2. 生年月日 OR S1.性別 = S2.性別</li><li onclick="checkAnswer(this, true)">SELECT MIN(生年月日) FROM 従業員 AS S2 WHERE S1.性別 = S2.性別</li><li onclick="checkAnswer(this, false)">SELECT MIN(生年月日) FROM 従業員 AS S2 GROUP BY S2.性別</li><li onclick="checkAnswer(this, false)">SELECT MIN(生年月日) FROM 従業員 GROUP BY S2.性別</li>
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ トランザクション中の変更を確定し、データベースに永続化する操作</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_87')">解答と解説を確認する</button>
                 <div id="test_ans_87" class="answer-area">
-                    <div class="answer-label">正解: SELECT MIN(生年月日) FROM 従業員 AS S2 WHERE S1.性別 = S2.性別</div>
-                    <div class="explanation">男女それぞれで最年長（生年月日が最小）を除外するため、外側のS1と同じ性別に絞る相関副問合せを使います。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">COMMITは、「トランザクション中の変更を確定し、データベースに永続化する操作」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q88 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「ファントム」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">2つの関係のすべてのタプルの組み合わせを生成する演算</li>
+    <li onclick="checkAnswer(this, true)">ア 同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">イ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">ウ 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">エ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_88')">解答と解説を確認する</button>
                 <div id="test_ans_88" class="answer-area">
-                    <div class="answer-label">正解: 2つの関係のすべてのタプルの組み合わせを生成する演算</div>
-                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">ファントムは、「同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q89 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第1正規形(1NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「外部スキーマ」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, true)">繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+    <li onclick="checkAnswer(this, false)">ア トランザクション中の変更を確定し、データベースに永続化する操作</li><li onclick="checkAnswer(this, false)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, true)">エ ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_89')">解答と解説を確認する</button>
                 <div id="test_ans_89" class="answer-area">
-                    <div class="answer-label">正解: 繰り返し項目、複数値属性、入れ子構造を持たない状態</div>
-                    <div class="explanation">第1正規形(1NF)は、「繰り返し項目、複数値属性、入れ子構造を持たない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">外部スキーマは、「ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q90 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li>
+    <li onclick="checkAnswer(this, false)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_90')">解答と解説を確認する</button>
                 <div id="test_ans_90" class="answer-area">
-                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
-                    <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q91 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「第2正規形(2NF)」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, true)">ウ 1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の属性（列）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_91')">解答と解説を確認する</button>
                 <div id="test_ans_91" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第2正規形(2NF)は、「1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
                 <div class="question-type">Q92 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
+                <div class="question-text">次の記述のうち、「結合従属性」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li>
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, true)">エ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_92')">解答と解説を確認する</button>
                 <div id="test_ans_92" class="answer-area">
-                    <div class="answer-label">正解: 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</div>
-                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">結合従属性は、「ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
-            <div class="question-card fixed">
+            <div class="question-card ">
                 <div class="question-type">Q93 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定・OB】</span> DBMSをシステム障害発生後に再立上げするとき、ロールフォワードすべきトランザクションとロールバックすべきトランザクションの組合せとして、適切なものはどれか。ここで、トランザクションの中で実行される処理内容は次のとおりとする。【令和7年秋期・問12】<br>
-<table class="db-table">
-<tr><th>トランザクション</th><th>データベースに対するRead回数とWrite回数</th></tr>
-<tr><td>T1, T2</td><td>Read 10, Write 20</td></tr>
-<tr><td>T3, T4</td><td>Read 100</td></tr>
-<tr><td>T5, T6</td><td>Read 20, Write 10</td></tr>
-</table>
-<div class="timeline-box">
-           チェックポイント             障害発生
-                  |                      |
-T1 ───────●         |                      |
-T2 ───────────────|──────────────●       |
-T3                |     ─────────────────|
-T4 ───────────────|────────────────────────|
-T5                |        ──────────●     |
-T6                |              ────────|
-                  |                      |
-                 時間 ─────────────────────────>
-● コミットされたトランザクションを示す。
-─ コミットされていないトランザクションを示す。
-</div></div>
+                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, true)">ア ロールフォワード: T2, T5 / ロールバック: T6</li><li onclick="checkAnswer(this, false)">イ ロールフォワード: T1, T2, T5 / ロールバック: T6</li><li onclick="checkAnswer(this, false)">ウ ロールフォワード: T1, T2, T5 / ロールバック: T3, T6</li><li onclick="checkAnswer(this, false)">エ ロールフォワード: T2, T5 / ロールバック: T3, T6</li>
+    <li onclick="checkAnswer(this, false)">ア データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, false)">ウ BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">エ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_93')">解答と解説を確認する</button>
                 <div id="test_ans_93" class="answer-area">
-                    <div class="answer-label">正解: ア ロールフォワード: T2, T5 / ロールバック: T6</div>
-                    <div class="explanation">CP前に完了したT1は対象外。障害前に完了し更新のあるT2, T5はロールフォワード。障害時に未完了で更新のあるT6はロールバック。T3等の読込みのみのトランザクションはDBを書き換えないためロールバック不要です。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q94 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「非クラスタ化索引」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, true)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">1NFを満たし、すべての非キー属性が候補キーに完全関数従属している状態</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_94')">解答と解説を確認する</button>
-                <div id="test_ans_94" class="answer-area">
-                    <div class="answer-label">正解: 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</div>
-                    <div class="explanation">非クラスタ化索引は、「索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card fixed">
-                <div class="question-type">Q95 : テストモード (4択)</div>
-                <div class="question-text"><span class='highlight'>【★第14回確定】</span>関係モデルの候補キーの説明のうち、適切なものはどれか。【平成28年春期・問7】</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">一つの関係に候補キーが複数あってはならない。</li><li onclick="checkAnswer(this, false)">候補キーは主キーの中から選ぶ。</li><li onclick="checkAnswer(this, true)">候補キーの値はタプルごとに異なる。</li><li onclick="checkAnswer(this, false)">関係Rの候補キーは関係Rの属性の中から選ばない。</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_95')">解答と解説を確認する</button>
-                <div id="test_ans_95" class="answer-area">
-                    <div class="answer-label">正解: 候補キーの値はタプルごとに異なる。</div>
-                    <div class="explanation">候補キーは一意性（各タプルを一意に識別できる）と極小性を満たす属性集合です。値が同じタプルが存在すると一意に識別できません。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q96 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「厳密なスケジュール」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">同じ条件で検索したとき、途中の挿入・削除により行集合が変わってしまう現象</li><li onclick="checkAnswer(this, false)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_96')">解答と解説を確認する</button>
-                <div id="test_ans_96" class="answer-area">
-                    <div class="answer-label">正解: 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</div>
-                    <div class="explanation">厳密なスケジュールは、「他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q97 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「RAG (Retrieval-Augmented Generation)」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</li><li onclick="checkAnswer(this, false)">データを更新する際に取得するロック。他のいかなるロックとも競合する</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_97')">解答と解説を確認する</button>
-                <div id="test_ans_97" class="answer-area">
-                    <div class="answer-label">正解: 質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み</div>
-                    <div class="explanation">RAG (Retrieval-Augmented Generation)は、「質問に関連する文書をベクトル検索等で取り出し、その内容を参考にLLMが回答を生成する仕組み」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q98 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「選択」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, true)">関係から特定の条件を満たすタプル（行）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li><li onclick="checkAnswer(this, false)">関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_98')">解答と解説を確認する</button>
-                <div id="test_ans_98" class="answer-area">
-                    <div class="answer-label">正解: 関係から特定の条件を満たすタプル（行）のみを抽出する演算</div>
-                    <div class="explanation">選択は、「関係から特定の条件を満たすタプル（行）のみを抽出する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
-                </div>
-            </div>
-    
-            <div class="question-card ">
-                <div class="question-type">Q99 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「転置インデックス」に関する適切なものはどれか。</div>
-                <ul class="options">
-    <li onclick="checkAnswer(this, false)">未コミットのトランザクションが書き込んだデータを、他のトランザクションが読んでしまう現象</li><li onclick="checkAnswer(this, false)">索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, true)">単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li>
-                </ul>
-                <button class="btn" onclick="toggleAnswer('test_ans_99')">解答と解説を確認する</button>
-                <div id="test_ans_99" class="answer-area">
-                    <div class="answer-label">正解: 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</div>
+                    <div class="answer-label">正解: エ</div>
                     <div class="explanation">転置インデックスは、「単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
             <div class="question-card ">
-                <div class="question-type">Q100 : テストモード (4択)</div>
-                <div class="question-text">次の記述のうち、「自然結合」に関する適切なものはどれか。</div>
+                <div class="question-type">Q94 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「内部スキーマ」に関する適切なものはどれか。</div>
                 <ul class="options">
-    <li onclick="checkAnswer(this, false)">索引順とデータの物理配置が近いように配置された索引で、範囲検索で連続ページを読みやすい</li><li onclick="checkAnswer(this, true)">同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, false)">2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, false)">ユーザやアプリケーションから見たデータの見え方を定義するもの（ビューなど）</li>
+    <li onclick="checkAnswer(this, true)">ア データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">イ 単語をキーとして、その単語を含む文書IDの集合を引く索引。全文検索で用いられる</li><li onclick="checkAnswer(this, false)">ウ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">エ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_94')">解答と解説を確認する</button>
+                <div id="test_ans_94" class="answer-area">
+                    <div class="answer-label">正解: ア</div>
+                    <div class="explanation">内部スキーマは、「データが物理的にどのように記憶装置に格納されるかを定義するもの」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q95 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「直積」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 関係から特定の属性（列）のみを抽出する演算</li><li onclick="checkAnswer(this, false)">イ 繰り返し項目、複数値属性、入れ子構造を持たない状態</li><li onclick="checkAnswer(this, true)">ウ 2つの関係のすべてのタプルの組み合わせを生成する演算</li><li onclick="checkAnswer(this, false)">エ データが物理的にどのように記憶装置に格納されるかを定義するもの</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_95')">解答と解説を確認する</button>
+                <div id="test_ans_95" class="answer-area">
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">直積は、「2つの関係のすべてのタプルの組み合わせを生成する演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q96 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「結合従属性」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ ある属性Xが決まると、別の属性Yの値の集合が独立して決まる性質</li><li onclick="checkAnswer(this, true)">エ ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_96')">解答と解説を確認する</button>
+                <div id="test_ans_96" class="answer-area">
+                    <div class="answer-label">正解: エ</div>
+                    <div class="explanation">結合従属性は、「ある関係を複数の射影に分解し、それらを自然結合すると常に元の関係が復元できる性質」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q97 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「LSH (Locality Sensitive Hashing)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア BCNFを満たし、自明でない多値従属性が存在しない状態</li><li onclick="checkAnswer(this, true)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, false)">ウ トランザクション中の変更をすべて取り消し、開始前の状態に戻す操作</li><li onclick="checkAnswer(this, false)">エ 他のトランザクションが書き込んだデータを読み書きする場合、書き込んだ側が終了した後でなければならないスケジュール</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_97')">解答と解説を確認する</button>
+                <div id="test_ans_97" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">LSH (Locality Sensitive Hashing)は、「似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q98 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「共有ロック」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 2NFを満たし、非キー属性にいかなる推移的関数従属性も存在しない状態</li><li onclick="checkAnswer(this, true)">イ データを読み込む際に取得するロック。他の共有ロックと競合しない</li><li onclick="checkAnswer(this, false)">ウ 索引順とデータ配置が一致しないため、多数の行を読むとランダムI/Oが増えやすい索引</li><li onclick="checkAnswer(this, false)">エ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_98')">解答と解説を確認する</button>
+                <div id="test_ans_98" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">共有ロックは、「データを読み込む際に取得するロック。他の共有ロックと競合しない」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q99 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「選択率」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</li><li onclick="checkAnswer(this, true)">イ 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">ウ データが物理的にどのように記憶装置に格納されるかを定義するもの</li><li onclick="checkAnswer(this, false)">エ コミット済みの更新をログ（更新後ログ）を用いて再反映し、障害から回復する処理</li>
+                </ul>
+                <button class="btn" onclick="toggleAnswer('test_ans_99')">解答と解説を確認する</button>
+                <div id="test_ans_99" class="answer-area">
+                    <div class="answer-label">正解: イ</div>
+                    <div class="explanation">選択率は、「条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                </div>
+            </div>
+    
+            <div class="question-card ">
+                <div class="question-type">Q100 : テストモード (4択)</div>
+                <div class="question-text">次の記述のうち、「第5正規形(5NF)」に関する適切なものはどれか。</div>
+                <ul class="options">
+    <li onclick="checkAnswer(this, false)">ア 条件を満たすレコードの割合。これが低いほどインデックスが有効になりやすい</li><li onclick="checkAnswer(this, false)">イ 似ているデータが同じバケットに入りやすいように設計された、近似最近傍探索で使われるハッシュ手法</li><li onclick="checkAnswer(this, true)">ウ 4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態</li><li onclick="checkAnswer(this, false)">エ 関係から特定の条件を満たすタプル（行）のみを抽出する演算</li>
                 </ul>
                 <button class="btn" onclick="toggleAnswer('test_ans_100')">解答と解説を確認する</button>
                 <div id="test_ans_100" class="answer-area">
-                    <div class="answer-label">正解: 同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算</div>
-                    <div class="explanation">自然結合は、「同じ名前の属性同士で等結合を行い、重複する属性を1つにまとめる結合演算」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
+                    <div class="answer-label">正解: ウ</div>
+                    <div class="explanation">第5正規形(5NF)は、「4NFを満たし、候補キーによって含意されない非自明な結合従属性が存在しない状態」として定義される重要概念です。各回の講義資料および関連知識を確認してください。</div>
                 </div>
             </div>
     
@@ -1774,5 +1819,5 @@ T6                |              ────────|
     </script>
 </body>
 </html>
-strategic_database_drill_exact14th.html
-「strategic_database_drill_exact14th.html」を表示しています。
+strategic_database_drill_visual_final.html
+「strategic_database_drill_visual_final.html」を表示しています。
